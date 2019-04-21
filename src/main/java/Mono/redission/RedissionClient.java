@@ -19,12 +19,6 @@ public class RedissionClient {
                             .addNodeAddress("redis://127.0.0.1:7002")
                             .setPassword("ijklk~df.oie,80@2");
 
-//                    config.useClusterServers()
-//                            .setScanInterval(2000) // cluster state scan interval in milliseconds
-//                            // use "rediss://" for SSL connection
-//                            .addNodeAddress("redis://47.74.155.85:7000", "redis://47.74.155.85:7001")
-//                            .addNodeAddress("redis://47.74.155.85:7002")
-//                            .setPassword("ijklk~df.oie,80@2");
 
                     redissonClient = Redisson.create(config);
                 }
