@@ -70,10 +70,8 @@ public class Controller {
     @RequestMapping(value = "/getRedis")
     public String getRedis(String key) {
         RedissonClient redisson= RedissionClient.getInstance();
-        RBucket<Long> bucket =redisson.getBucket(key);
+        RBucket<String> bucket =redisson.getBucket(key);
         System.out.println("bucket:"+bucket.get());
-        RAtomicLong rAtomicLong = redisson.getAtomicLong(key);
-        System.out.println("rAtomicLong.get():"+rAtomicLong.get());
 
 
 
