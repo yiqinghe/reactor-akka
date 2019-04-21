@@ -72,11 +72,11 @@ public class Controller {
         RBucket<String> bucket =redisson.getBucket("stringKey");
         System.out.println("bucket:"+bucket.get());
 
-        RBuckets buckets = redisson.getBuckets();
-        Map<String, String> loadedBuckets = buckets.get("myBucket1", "myBucket2", "myBucket3");
-        System.out.println("myBucket1:"+loadedBuckets.get("myBucket1"));
-        System.out.println("myBucket2:"+loadedBuckets.get("myBucket2"));
-        System.out.println("myBucket3:"+loadedBuckets.get("myBucket3"));
+//        RBuckets buckets = redisson.getBuckets();
+//        Map<String, String> loadedBuckets = buckets.get("myBucket1", "myBucket2", "myBucket3");
+//        System.out.println("myBucket1:"+loadedBuckets.get("myBucket1"));
+//        System.out.println("myBucket2:"+loadedBuckets.get("myBucket2"));
+//        System.out.println("myBucket3:"+loadedBuckets.get("myBucket3"));
 
 
         return "getRedis"+bucket.get();
