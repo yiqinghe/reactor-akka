@@ -2,6 +2,7 @@ package Mono;
 
 import Mono.redission.RedissionClient;
 import client.Main;
+import org.redisson.api.RAtomicLong;
 import org.redisson.api.RBucket;
 import org.redisson.api.RBuckets;
 import org.redisson.api.RedissonClient;
@@ -69,8 +70,12 @@ public class Controller {
     @RequestMapping(value = "/getRedis")
     public String getRedis(String key) {
         RedissonClient redisson= RedissionClient.getInstance();
-        RBucket<String> bucket =redisson.getBucket(key);
-        System.out.println("bucket:"+bucket.get());
+//        RBucket<String> bucket =redisson.getBucket(key);
+//        System.out.println("bucket:"+bucket.get());
+        RAtomicLong rAtomicLong = redisson.getAtomicLong("key");
+        System.out.println("rAtomicLong.get():"+rAtomicLong.get());
+
+
 
 //        RBuckets buckets = redisson.getBuckets();
 //        Map<String, String> loadedBuckets = buckets.get("myBucket1", "myBucket2", "myBucket3");
@@ -79,7 +84,7 @@ public class Controller {
 //        System.out.println("myBucket3:"+loadedBuckets.get("myBucket3"));
 
 
-        return "getRedis"+bucket.get();
+        return "getRedis";
     }
     @RequestMapping(value = "/setRedis")
     public String setRedis(String key,String value) {
