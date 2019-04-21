@@ -67,9 +67,9 @@ public class Controller {
         return "client";
     }
     @RequestMapping(value = "/getRedis")
-    public String getRedis() {
+    public String getRedis(String key) {
         RedissonClient redisson= RedissionClient.getInstance();
-        RBucket<String> bucket =redisson.getBucket("stringKey");
+        RBucket<String> bucket =redisson.getBucket(key);
         System.out.println("bucket:"+bucket.get());
 
 //        RBuckets buckets = redisson.getBuckets();
@@ -82,10 +82,10 @@ public class Controller {
         return "getRedis"+bucket.get();
     }
     @RequestMapping(value = "/setRedis")
-    public String setRedis() {
+    public String setRedis(String key,String value) {
 
-        RBucket<String> bucket = RedissionClient.getInstance().getBucket("stringKey");
-        bucket.set("testValue");
+        RBucket<String> bucket = RedissionClient.getInstance().getBucket(key);
+        bucket.set(value);
         return "setRedis";
     }
 }
