@@ -11,6 +11,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Deprecated
 @RestController
 public class Controller {
 

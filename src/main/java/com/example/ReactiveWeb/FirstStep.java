@@ -5,6 +5,7 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import org.springframework.web.context.request.async.DeferredResult;
 
+@Deprecated
 //#greeter-messages
 public class FirstStep extends AbstractActor {
     //#greeter-messages

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
+@Deprecated
 public class AsynRpcInovker {
     // 单例，模拟io事件监听 ，定时器到期事件属于硬件终端触发
     private volatile Map<Integer, Timer> timers = new HashMap<>();

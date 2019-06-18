@@ -1,7 +1,7 @@
 package com.example.ReactiveWeb;
 
 import org.springframework.web.context.request.async.DeferredResult;
-
+@Deprecated
 public class Request {
 
     public final long requestTime;

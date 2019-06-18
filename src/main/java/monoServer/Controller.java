@@ -1,10 +1,8 @@
-package Mono;
+package monoServer;
 
-import Mono.redission.RedissionClient;
+import monoServer.redission.RedissionClient;
 import client.Main;
-import org.redisson.api.RAtomicLong;
 import org.redisson.api.RBucket;
-import org.redisson.api.RBuckets;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -48,9 +45,17 @@ public class Controller {
     public Mono<String> sayHello() {
       // System.out.println("Request received");
 
+        String userId = "12ee";
+
+        Mono<String> kk = Mono.just("hello");
+
+
         Mono<String> monoResult = Mono.create(deferredResult->{
+            String hhhh =userId;
+            String kvalue = kk.block();
             sayHelloService.sayHello(deferredResult);
         });
+
 
       // System.out.println("Servlet thread released");
 
@@ -72,7 +77,7 @@ public class Controller {
         RedissonClient redisson= RedissionClient.getInstance();
         RBucket<String> bucket =redisson.getBucket(key);
         System.out.println("bucket:"+bucket.get());
-
+        // fixme 为何这里一直取出来的是null
 
 
 //        RBuckets buckets = redisson.getBuckets();

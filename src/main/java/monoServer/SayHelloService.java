@@ -1,4 +1,4 @@
-package Mono;
+package monoServer;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;

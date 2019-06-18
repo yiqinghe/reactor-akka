@@ -2,7 +2,7 @@ package com.example.ReactiveWeb;
 
 import akka.actor.AbstractActor;
 import akka.actor.Props;
-
+@Deprecated
 //#greeter-messages
 public class SecondStep extends AbstractActor {
     //#greeter-messages

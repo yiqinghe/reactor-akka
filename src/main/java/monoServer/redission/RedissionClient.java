@@ -1,4 +1,4 @@
-package Mono.redission;
+package monoServer.redission;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -13,6 +13,7 @@ public class RedissionClient {
             synchronized (RedissionClient.class){
                 if(redissonClient == null){
                     Config config = new Config();
+                    // fixme 编码
                     config.setCodec(new StringCodec());
                     config.useClusterServers()
                             .setScanInterval(2000) // cluster state scan interval in milliseconds
