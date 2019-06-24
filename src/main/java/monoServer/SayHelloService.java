@@ -4,6 +4,8 @@ import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
+import monoServer.http.HttpAsynInovker;
+import monoServer.lettuce.LettuceClient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.MonoSink;
 
@@ -27,16 +29,20 @@ public class SayHelloService {
 
         long processGroupId =  reqeustIndex.addAndGet(1) % processGroupCount;
 
-        BusinessProcess businessProcessKey = new BusinessProcess("demo", processGroupId, null, null);
+        BusinessProcess businessProcessKey = new BusinessProcess("demo", processGroupId, null, null,null,null);
         BusinessProcess businessProcess = businessProcessMap.get(businessProcessKey);
         if (businessProcess == null) {
             // 倒序组装依赖，责任链模式
             final ActorRef responseStepActor =
                     system.actorOf(ResponseStep.props(), "responseStepActor" + processGroupId);
+            final ActorRef httpStepActor =
+                    system.actorOf(HttpStep.props(responseStepActor), "httpStepActor" + processGroupId);
+            final ActorRef redisStepActor =
+                    system.actorOf(RedisStep.props(httpStepActor), "redisStepActor" + processGroupId);
             final ActorRef firstStepActor =
-                    system.actorOf(FirstStep.props(responseStepActor), "firstStepActor" + processGroupId);
+                    system.actorOf(FirstStep.props(redisStepActor), "firstStepActor" + processGroupId);
 
-            businessProcess = new BusinessProcess("demo", processGroupId, responseStepActor, firstStepActor);
+            businessProcess = new BusinessProcess("demo", processGroupId, responseStepActor,httpStepActor,redisStepActor, firstStepActor);
             businessProcessMap.put(businessProcessKey, businessProcess);
         }
         businessProcess.firstStepActor.tell(deferredResult, ActorRef.noSender());
@@ -51,12 +57,17 @@ public class SayHelloService {
         // 组id
         final long processGroupId;
         final ActorRef responseStepActor;
+        final ActorRef httpStep;
+        final ActorRef redisStep;
         final ActorRef firstStepActor;
 
-        public BusinessProcess(String business, long processGroupId, ActorRef responseStepActor, ActorRef firstStepActor) {
+        public BusinessProcess(String business, long processGroupId, ActorRef responseStepActor,
+                               ActorRef httpStep,  ActorRef redisStep,ActorRef firstStepActor) {
             this.business = business;
             this.processGroupId = processGroupId;
             this.responseStepActor = responseStepActor;
+            this.httpStep = httpStep;
+            this.redisStep = redisStep;
             this.firstStepActor = firstStepActor;
         }
 
@@ -82,10 +93,10 @@ public class SayHelloService {
             return Props.create(FirstStep.class, () -> new FirstStep(secondStepActor));
         }
 
-        private final ActorRef responseStepActor;
+        private final ActorRef secondStep;
 
-        public FirstStep(ActorRef responseStepActor) {
-            this.responseStepActor = responseStepActor;
+        public FirstStep(ActorRef secondStep) {
+            this.secondStep = secondStep;
         }
 
         @Override
@@ -103,7 +114,7 @@ public class SayHelloService {
                                 (requestContext) -> {
                                     // 回调通知，将结果跟上下文传递给下一个步骤执行
                                     //System.out.println("FirstStep recall");
-                                    responseStepActor.tell(requestContext, getSelf());
+                                    secondStep.tell(requestContext, getSelf());
                                 });
                         // 发起异步远程调用
                         AsynRpcInovker.getInstance().asynCall(command);
@@ -111,6 +122,80 @@ public class SayHelloService {
                     .build();
         }
     }
+
+    /**
+     * 从redis异步获取值
+     */
+    static class RedisStep extends AbstractActor {
+        //#greeter-messages
+        static public Props props(ActorRef httpActor) {
+            return Props.create(RedisStep.class, () -> new RedisStep(httpActor));
+        }
+
+        private final ActorRef httpActor;
+
+        public RedisStep(ActorRef httpActor) {
+            this.httpActor = httpActor;
+        }
+
+
+        @Override
+        public Receive createReceive() {
+            return receiveBuilder()
+                    .match(Request.class, request -> {
+
+                        LettuceClient.getInstance().get(
+                                "phone"+request.uid,
+                                value->{
+                                    // redis获取到结果，发送到下一个处理器
+                                    request.setPhone(value);
+                                    httpActor.tell(request, getSelf());
+                                },
+                                error->System.out.println(error));
+
+                    })
+                    .build();
+        }
+    }
+
+    /**
+     * 从http异步获取值
+     */
+    static class HttpStep extends AbstractActor {
+        //#greeter-messages
+        static public Props props(ActorRef responseStepActor) {
+            return Props.create(HttpStep.class, () -> new HttpStep(responseStepActor));
+        }
+
+        private final ActorRef responseStepActor;
+
+        public HttpStep(ActorRef responseStepActor) {
+            this.responseStepActor = responseStepActor;
+        }
+
+
+        @Override
+        public Receive createReceive() {
+            return receiveBuilder()
+                    .match(Request.class, request -> {
+
+                        HttpAsynInovker.Command command = new HttpAsynInovker.Command(request, System.currentTimeMillis(),
+                                (resultFromHttp) -> {
+                                    // 回调通知，将结果跟上下文传递给下一个步骤执行
+                                    // System.out.println("FirstStep recall");
+                                    responseStepActor.tell(resultFromHttp, getSelf());
+                        });
+                        // 发起异步远程调用
+                        HttpAsynInovker.getInstance().asynCall(command);
+
+                    })
+                    .build();
+        }
+    }
+
+    /**
+     * 专门最后输出给前端的步骤
+     */
     static class ResponseStep extends AbstractActor {
         //#greeter-messages
         static public Props props() {
