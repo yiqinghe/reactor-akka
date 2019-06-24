@@ -89,14 +89,14 @@ public class SayHelloService {
 
     static class FirstStep extends AbstractActor {
         //#greeter-messages
-        static public Props props(ActorRef secondStepActor) {
-            return Props.create(FirstStep.class, () -> new FirstStep(secondStepActor));
+        static public Props props(ActorRef redisStep) {
+            return Props.create(FirstStep.class, () -> new FirstStep(redisStep));
         }
 
-        private final ActorRef secondStep;
+        private final ActorRef redisStep;
 
-        public FirstStep(ActorRef secondStep) {
-            this.secondStep = secondStep;
+        public FirstStep(ActorRef redisStep) {
+            this.redisStep =  redisStep;
         }
 
         @Override
@@ -114,7 +114,7 @@ public class SayHelloService {
                                 (requestContext) -> {
                                     // 回调通知，将结果跟上下文传递给下一个步骤执行
                                     //System.out.println("FirstStep recall");
-                                    secondStep.tell(requestContext, getSelf());
+                                    redisStep.tell(requestContext, getSelf());
                                 });
                         // 发起异步远程调用
                         AsynRpcInovker.getInstance().asynCall(command);
