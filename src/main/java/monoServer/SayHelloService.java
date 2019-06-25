@@ -148,6 +148,7 @@ public class SayHelloService {
                                 "phone"+request.uid,
                                 value->{
                                     // redis获取到结果，发送到下一个处理器
+                                    System.out.println("redis result:"+value);
                                     request.setPhone(value);
                                     httpActor.tell(request, getSelf());
                                 },

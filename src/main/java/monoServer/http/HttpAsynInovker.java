@@ -40,8 +40,8 @@ public class HttpAsynInovker {
 
       //  String host="172.21.193.165:7879";
 //        String host ="localhost:8080";
-        String host ="localhost:7879";
-        AsynHttpClient.get("http://"+host+"/test",command);
+        String host ="localhost:8765";
+        AsynHttpClient.get("http://"+host+"/hi",command);
 
         return asynRpcInovker;
     }

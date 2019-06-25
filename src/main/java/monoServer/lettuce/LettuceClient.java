@@ -19,7 +19,7 @@ public class LettuceClient {
           synchronized (LettuceClient.class){
               if (lettuceClient==null){
                   lettuceClient = new LettuceClient();
-                  RedisClient redisClient = RedisClient.create("redis://password@localhost:6379/0");
+                  RedisClient redisClient = RedisClient.create("redis://localhost:6379");
                   lettuceClient.statefulRedisConnection = redisClient.connect();
 
                   redisReactiveCommands = statefulRedisConnection.reactive();
