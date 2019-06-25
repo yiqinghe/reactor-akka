@@ -13,6 +13,7 @@ import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.nio.reactor.IOReactorException;
+import org.apache.http.util.EntityUtils;
 
 public class HttpAsynInovker {
 
@@ -109,7 +110,7 @@ public class HttpAsynInovker {
                     // System.out.println(request2.getRequestLine() + "->" + response2.getStatusLine());
                     try {
                         // http 访问成功，回调
-                        // System.out.println(EntityUtils.toString(response2.getEntity()));
+                        System.out.println(EntityUtils.toString(response2.getEntity()));
                         command.request.setHttpResult("success");
                         command.commandDoneListener.recall(command.request);
                     } catch (Exception e) {

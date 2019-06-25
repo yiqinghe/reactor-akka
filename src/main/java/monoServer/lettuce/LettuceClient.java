@@ -29,12 +29,11 @@ public class LettuceClient {
       return lettuceClient;
   }
 
-  public void get(String key, Consumer<String> completeConsumer, Consumer errorConsumer){
-      redisReactiveCommands.get(key).subscribe(
-             // value->{xxxx.tell(value);}
+  public void get(String key, Consumer<List<String>> completeConsumer, Consumer errorConsumer){
+      Flux.just(key).flatMap(tempKey -> redisReactiveCommands.get(tempKey)).collectList().subscribe(
               completeConsumer,
               errorConsumer,
-              ()->System.out.println("complete get"));
+              ()->System.out.println("redis complete get"));
   }
 
     /**
@@ -52,7 +51,7 @@ public class LettuceClient {
         //      }
               completeConsumer,
               errorConsumer,
-              ()->System.out.println("complete mGet"));
+              ()->System.out.println("redis complete mGet"));
   }
 
 }

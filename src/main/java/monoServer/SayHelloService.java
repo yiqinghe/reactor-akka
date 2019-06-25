@@ -20,6 +20,7 @@ public class SayHelloService {
 
     static Map<BusinessProcess, BusinessProcess> businessProcessMap = new ConcurrentHashMap<>();
 
+    public static final String NULL_VALUE = "@null";
 
     final long processGroupCount = 20;
     AtomicLong reqeustIndex = new AtomicLong();
@@ -143,13 +144,18 @@ public class SayHelloService {
         public Receive createReceive() {
             return receiveBuilder()
                     .match(Request.class, request -> {
-
                         LettuceClient.getInstance().get(
-                                "phone"+request.uid,
-                                value->{
+                                "phone2222",
+                                list->{
+                                    String value=null;
+                                    if(list!=null && !list.isEmpty()){
+                                        System.out.println("redis value:"+list.get(0));
+                                        value =list.get(0);
+                                       request.setPhone(value);
+                                    }else{
+                                        value=NULL_VALUE;
+                                    }
                                     // redis获取到结果，发送到下一个处理器
-                                    System.out.println("redis result:"+value);
-                                    request.setPhone(value);
                                     httpActor.tell(request, getSelf());
                                 },
                                 error->System.out.println(error));
