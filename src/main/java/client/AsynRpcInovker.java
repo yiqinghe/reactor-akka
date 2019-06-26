@@ -1,5 +1,7 @@
 package client;
 
+import com.netflix.loadbalancer.IRule;
+import context.SpringContext;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -11,6 +13,11 @@ import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.nio.reactor.IOReactorException;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+
+import java.util.List;
+
 
 public class AsynRpcInovker {
 
@@ -34,12 +41,16 @@ public class AsynRpcInovker {
     private static AsynRpcInovker asynRpcInovker;
 
 
+
     public AsynRpcInovker asynCall(Command command) {
 
       //  String host="172.21.193.165:7879";
 //        String host ="localhost:8080";
-        String host ="localhost:7879";
-        AsynHttpClient.get("http://"+host+"/sayHello",command);
+        //String host ="localhost:7879";
+        //AsynHttpClient.get("http://"+host+"/sayHello",command);
+        MyRoundLoadBalancer myRoundLoadBalancer = SpringContext.getBean(MyRoundLoadBalancer.class);
+        ServiceInstance chose = myRoundLoadBalancer.chose("feign-server");
+        AsynHttpClient.get(chose.getUri().toString()+"",command);
 
         return asynRpcInovker;
     }

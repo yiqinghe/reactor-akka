@@ -7,6 +7,8 @@ public class Request {
     public final long requestTime;
     public final String uid;
     private String phone;
+    private String httpRequestPath;
+    private String httpRequestbody;
     private String httpResult;
     public final MonoSink deferredResult;
 
@@ -30,5 +32,22 @@ public class Request {
 
     public void setHttpResult(String httpResult) {
         this.httpResult = httpResult;
+    }
+
+
+    public String getHttpRequestPath() {
+        return httpRequestPath;
+    }
+
+    public void setHttpRequestPath(String httpRequestPath) {
+        this.httpRequestPath = httpRequestPath;
+    }
+
+    public String getHttpRequestbody() {
+        return httpRequestbody;
+    }
+
+    public void setHttpRequestbody(String httpRequestbody) {
+        this.httpRequestbody = httpRequestbody;
     }
 }

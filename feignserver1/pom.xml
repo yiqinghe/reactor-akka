@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>feignserver3</artifactId>
+    <artifactId>feignserver1</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>feignserver1</name>
     <description>Demo project for Spring Boot</description>
