@@ -1,9 +1,9 @@
 package monoServer.http;
 
-import client.Main;
 import monoServer.SpringContext;
 import monoServer.MyRoundLoadBalancer;
 import monoServer.Request;
+import monoServer.common.Contance;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -70,9 +70,9 @@ public class HttpAsynInovker {
                 synchronized (AsynHttpClient.class){
                     if(client==null){
                         RequestConfig requestConfig = RequestConfig.custom()
-                                .setConnectTimeout(Main.setConnectTimeout)
-                                .setSocketTimeout(Main.setSocketTimeout)
-                                .setConnectionRequestTimeout(Main.setConnectionRequestTimeout)
+                                .setConnectTimeout(Contance.setConnectTimeout)
+                                .setSocketTimeout(Contance.setSocketTimeout)
+                                .setConnectionRequestTimeout(Contance.setConnectionRequestTimeout)
                                 .build();
 
                         //配置io线程
@@ -88,8 +88,8 @@ public class HttpAsynInovker {
                             e.printStackTrace();
                         }
                         PoolingNHttpClientConnectionManager connManager = new PoolingNHttpClientConnectionManager(ioReactor);
-                        connManager.setMaxTotal(Main.setMaxTotal);
-                        connManager.setDefaultMaxPerRoute(Main.setDefaultMaxPerRoute);
+                        connManager.setMaxTotal(Contance.setMaxTotal);
+                        connManager.setDefaultMaxPerRoute(Contance.setDefaultMaxPerRoute);
 
                         client = HttpAsyncClients.custom().
                                 setConnectionManager(connManager)

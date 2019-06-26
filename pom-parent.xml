@@ -19,6 +19,7 @@
 		<module>feignserver1</module>
 		<module>feignserver2</module>
 		<module>reactorserver</module>
+		<module>performanceTestClient</module>
 	</modules>
 
 

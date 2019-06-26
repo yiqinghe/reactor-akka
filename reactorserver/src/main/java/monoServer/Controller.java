@@ -1,7 +1,6 @@
 package monoServer;
 
 import monoServer.redission.RedissionClient;
-import client.Main;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,11 +68,6 @@ public class Controller {
     }
 
 
-    @RequestMapping(value = "/client")
-    public String client() {
-        Main.main(ReactiveWebApplication.argsMain);
-        return "client";
-    }
     @RequestMapping(value = "/getRedis")
     public String getRedis(String key) {
         RedissonClient redisson= RedissionClient.getInstance();
