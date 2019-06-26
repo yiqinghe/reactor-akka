@@ -1,7 +1,7 @@
 package client;
 
-import com.netflix.loadbalancer.IRule;
-import context.SpringContext;
+import monoServer.SpringContext;
+import monoServer.MyRoundLoadBalancer;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -14,9 +14,6 @@ import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.nio.reactor.IOReactorException;
 import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-
-import java.util.List;
 
 
 public class AsynRpcInovker {

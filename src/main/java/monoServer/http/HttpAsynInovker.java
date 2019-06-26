@@ -1,6 +1,8 @@
 package monoServer.http;
 
 import client.Main;
+import monoServer.SpringContext;
+import monoServer.MyRoundLoadBalancer;
 import monoServer.Request;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
@@ -14,6 +16,7 @@ import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.nio.reactor.IOReactorException;
 import org.apache.http.util.EntityUtils;
+import org.springframework.cloud.client.ServiceInstance;
 
 public class HttpAsynInovker {
 
@@ -39,11 +42,9 @@ public class HttpAsynInovker {
 
     public HttpAsynInovker asynCall(Command command) {
 
-      //  String host="172.21.193.165:7879";
-//        String host ="localhost:8080";
-        String host ="localhost:8765";
-        AsynHttpClient.get("http://"+host+"/hi",command);
-
+        MyRoundLoadBalancer myRoundLoadBalancer = SpringContext.getBean(MyRoundLoadBalancer.class);
+        ServiceInstance chose = myRoundLoadBalancer.chose("feign-server");
+        AsynHttpClient.get(chose.getUri().toString()+"/hi",command);
         return asynRpcInovker;
     }
 

@@ -1,4 +1,4 @@
-package client;
+package monoServer;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,24 +19,33 @@ public class MyRoundLoadBalancer {
     private ConcurrentHashMap<String,String> cacheServices = new ConcurrentHashMap<>();
 
     public ServiceInstance chose(String serviceName){
-        List<ServiceInstance> instances = discoveryClient.getInstances("feign-server");
+        List<ServiceInstance> instances = discoveryClient.getInstances(serviceName);
         if(instances == null || instances.size() < 1){
             throw new RuntimeException("no avalible server");
         }
         if(instances.size() == 1){
+            cacheServices.put(serviceName,instances.get(0).getUri().toString());
+            return instances.get(0);
+        }
+        String cachesercer = cacheServices.get(serviceName);
+        if(cachesercer == null){
+            cacheServices.put(serviceName,instances.get(0).getUri().toString());
             return instances.get(0);
         }
         for (int i = 0; i < instances.size(); i++) {
             ServiceInstance serviceInstance = instances.get(0);
-            if(serviceInstance.getUri().toString().equals(cacheServices.get(serviceName))){
+            if(serviceInstance.getUri().toString().equals(cachesercer)){
                 if(instances.size()  > i +1){
+                    cacheServices.put(serviceName,instances.get(i+1).getUri().toString());
                     return instances.get(i+1);
                 }
+                cacheServices.put(serviceName,instances.get(0).getUri().toString());
                 return instances.get(0);
             }
 
         }
         //历史server已经down掉
+        cacheServices.put(serviceName,instances.get(0).getUri().toString());
         return instances.get(0);
 
     }

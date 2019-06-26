@@ -40,6 +40,8 @@ public class Controller {
 
     public static  AtomicLong acceptCount = new AtomicLong();
 
+    @Autowired
+    public  MyRoundLoadBalancer myRoundLoadBalancer;
 
     @RequestMapping(value = "/sayHello")
     public Mono<String> sayHello() {
@@ -49,7 +51,7 @@ public class Controller {
 
         Mono<String> kk = Mono.just("hello");
 
-
+        //myRoundLoadBalancer.chose("feign-server");
         Mono<String> monoResult = Mono.create(deferredResult->{
             String hhhh =userId;
             String kvalue = kk.block();
