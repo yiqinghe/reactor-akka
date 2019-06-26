@@ -46,7 +46,7 @@ public class HttpAsynInovker {
     public HttpAsynInovker asynCall(Command command) {
 
         MyRoundLoadBalancer myRoundLoadBalancer = SpringContext.getBean(MyRoundLoadBalancer.class);
-        ServiceInstance chose = myRoundLoadBalancer.chose("feign-server");
+        ServiceInstance chose = myRoundLoadBalancer.rotationChose("feign-server");
         command.serviceInstance = chose;
         AsynHttpClient.get(chose.getUri().toString()+"/hi",command);
         return asynRpcInovker;

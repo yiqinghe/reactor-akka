@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class MyRoundLoadBalancer {
@@ -22,6 +24,39 @@ public class MyRoundLoadBalancer {
     private ConcurrentHashMap<String,String> cacheServices = new ConcurrentHashMap<>();
 
     private  ConcurrentHashMap<String,Long> failedServices = new ConcurrentHashMap<>();
+
+    private AtomicInteger rotationNum = new AtomicInteger(0);
+    /**
+     * 轮训算法
+     * @param serviceName
+     * @return
+     */
+    public ServiceInstance rotationChose(String serviceName){
+        List<ServiceInstance> instances = discoveryClient.getInstances(serviceName);
+        if(instances == null || instances.size() < 1){
+            throw new RuntimeException("no avalible server");
+        }
+        Iterator<ServiceInstance> it = instances.iterator();
+        while(it.hasNext()){
+            ServiceInstance serviceInstance = it.next();
+            System.out.println("uri:"+serviceInstance.getUri());
+            // fixme tmp 30秒内失败的实例不能使用,时间需要大于erureka获取最新的服务器节点时间
+            Long failedTime =failedServices.get(serviceInstance.getUri().toString());
+            if( failedTime !=null && failedTime + 1000*30 > new Date().getTime()){
+                System.out.println("remove failed node");
+                it.remove();
+
+            }else{
+                failedServices.remove(serviceInstance.getUri().toString());
+            }
+        }
+        if(instances.size()==0){
+            System.out.println("no available nodes");
+            return null;
+        }
+        return instances.get(rotationNum.incrementAndGet()%instances.size());
+
+    }
 
     public ServiceInstance chose(String serviceName){
         List<ServiceInstance> instances = discoveryClient.getInstances(serviceName);
