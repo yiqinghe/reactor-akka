@@ -13,4 +13,9 @@ public class FeignServer {
     public Integer test1(@RequestParam("number") Integer number){
         return number+1;
     }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/hi")
+    public Integer hi(){
+        return 9999;
+    }
 }

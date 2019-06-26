@@ -23,6 +23,9 @@ public class MyRoundLoadBalancer {
         if(instances == null || instances.size() < 1){
             throw new RuntimeException("no avalible server");
         }
+        for(ServiceInstance serviceInstance:instances){
+            System.out.println("uri:"+serviceInstance.getUri());
+        }
         if(instances.size() == 1){
             cacheServices.put(serviceName,instances.get(0).getUri().toString());
             return instances.get(0);
