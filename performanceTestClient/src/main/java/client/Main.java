@@ -1,7 +1,7 @@
 package client;
 
-import monoServer.ReactiveWebApplication;
 import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
 
 import java.util.Map;
 import java.util.Objects;
@@ -112,6 +112,7 @@ public class Main extends Thread {
 
     static Map<BusinessProcess, BusinessProcess> businessProcessMap = new ConcurrentHashMap<>();
 
+    public final static ActorSystem system = ActorSystem.create("root");;
 
     public static void main(String[] args) {
         // 处理参数
@@ -140,9 +141,9 @@ public class Main extends Thread {
                 if (businessProcess == null) {
                     // 倒序组装依赖，责任链模式
                     final ActorRef secondStepActor =
-                            ReactiveWebApplication.system.actorOf(SecondStep.props(), "secondStepActor" + processGroupId);
+                            system.actorOf(SecondStep.props(), "secondStepActor" + processGroupId);
                     final ActorRef firstStepActor =
-                            ReactiveWebApplication.system.actorOf(FirstStep.props(secondStepActor), "firstStepActor" + processGroupId);
+                            system.actorOf(FirstStep.props(secondStepActor), "firstStepActor" + processGroupId);
                     businessProcess = new BusinessProcess("demo", processGroupId, secondStepActor, firstStepActor);
                     businessProcessMap.put(businessProcessKey, businessProcess);
                 }

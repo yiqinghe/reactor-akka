@@ -1,9 +1,9 @@
 package monoServer.http;
 
-import client.Main;
 import monoServer.SpringContext;
 import monoServer.MyRoundLoadBalancer;
 import monoServer.Request;
+import monoServer.common.Contance;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -21,8 +21,11 @@ import org.springframework.cloud.client.ServiceInstance;
 public class HttpAsynInovker {
 
     public static class Command {
+
         final public Request request;
         final public long startTime;
+        public ServiceInstance serviceInstance;
+
 
         final public CommandDoneListener commandDoneListener;
 
@@ -43,7 +46,8 @@ public class HttpAsynInovker {
     public HttpAsynInovker asynCall(Command command) {
 
         MyRoundLoadBalancer myRoundLoadBalancer = SpringContext.getBean(MyRoundLoadBalancer.class);
-        ServiceInstance chose = myRoundLoadBalancer.chose("feign-server");
+        ServiceInstance chose = myRoundLoadBalancer.rotationChose("feign-server");
+        command.serviceInstance = chose;
         AsynHttpClient.get(chose.getUri().toString()+"/hi",command);
         return asynRpcInovker;
     }
@@ -70,9 +74,9 @@ public class HttpAsynInovker {
                 synchronized (AsynHttpClient.class){
                     if(client==null){
                         RequestConfig requestConfig = RequestConfig.custom()
-                                .setConnectTimeout(Main.setConnectTimeout)
-                                .setSocketTimeout(Main.setSocketTimeout)
-                                .setConnectionRequestTimeout(Main.setConnectionRequestTimeout)
+                                .setConnectTimeout(Contance.setConnectTimeout)
+                                .setSocketTimeout(Contance.setSocketTimeout)
+                                .setConnectionRequestTimeout(Contance.setConnectionRequestTimeout)
                                 .build();
 
                         //配置io线程
@@ -88,8 +92,8 @@ public class HttpAsynInovker {
                             e.printStackTrace();
                         }
                         PoolingNHttpClientConnectionManager connManager = new PoolingNHttpClientConnectionManager(ioReactor);
-                        connManager.setMaxTotal(Main.setMaxTotal);
-                        connManager.setDefaultMaxPerRoute(Main.setDefaultMaxPerRoute);
+                        connManager.setMaxTotal(Contance.setMaxTotal);
+                        connManager.setDefaultMaxPerRoute(Contance.setDefaultMaxPerRoute);
 
                         client = HttpAsyncClients.custom().
                                 setConnectionManager(connManager)
@@ -123,7 +127,9 @@ public class HttpAsynInovker {
                     // http 访问失败，回调
                     System.out.println("failed:"+request2.getRequestLine() + "->" + ex);
                     command.request.setHttpResult("failed");
+                    SpringContext.getBean(MyRoundLoadBalancer.class).notifeFailedNode(command.serviceInstance);
                     command.commandDoneListener.recall(command.request);
+
                 }
 
                 public void cancelled() {

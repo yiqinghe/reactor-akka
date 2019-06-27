@@ -1,7 +1,5 @@
 package client;
 
-import monoServer.SpringContext;
-import monoServer.MyRoundLoadBalancer;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -43,11 +41,9 @@ public class AsynRpcInovker {
 
       //  String host="172.21.193.165:7879";
 //        String host ="localhost:8080";
-        //String host ="localhost:7879";
-        //AsynHttpClient.get("http://"+host+"/sayHello",command);
-        MyRoundLoadBalancer myRoundLoadBalancer = SpringContext.getBean(MyRoundLoadBalancer.class);
-        ServiceInstance chose = myRoundLoadBalancer.chose("feign-server");
-        AsynHttpClient.get(chose.getUri().toString()+"",command);
+        String host ="localhost:7879";
+        AsynHttpClient.get("http://"+host+"/sayHello",command);
+
 
         return asynRpcInovker;
     }
