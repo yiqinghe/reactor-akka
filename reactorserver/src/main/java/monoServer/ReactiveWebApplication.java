@@ -3,8 +3,12 @@ package monoServer;
 import akka.actor.ActorSystem;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
+@EnableEurekaClient
+@EnableFeignClients
 public class ReactiveWebApplication {
 
 	public static String[] argsMain;

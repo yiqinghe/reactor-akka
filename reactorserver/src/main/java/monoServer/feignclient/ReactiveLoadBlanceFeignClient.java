@@ -1,4 +1,4 @@
-package feignclient;
+package monoServer.feignclient;
 
 import feign.Client;
 import feign.Request;

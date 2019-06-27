@@ -1,9 +1,9 @@
-package feignclient.config;
+package monoServer.feignclient.config;
 
 
 
 import feign.Client;
-import feignclient.ReactiveLoadBlanceFeignClient;
+import monoServer.feignclient.ReactiveLoadBlanceFeignClient;
 import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.cloud.openfeign.ribbon.CachingSpringLoadBalancerFactory;
 import org.springframework.context.annotation.Bean;

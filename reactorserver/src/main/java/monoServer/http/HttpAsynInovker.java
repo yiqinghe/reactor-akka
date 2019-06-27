@@ -22,9 +22,10 @@ public class HttpAsynInovker {
 
     public static class Command {
 
-        final public Request request;
+        public Request request;
         final public long startTime;
         public ServiceInstance serviceInstance;
+
 
 
         final public CommandDoneListener commandDoneListener;
