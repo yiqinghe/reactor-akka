@@ -39,7 +39,10 @@ public class SayHelloService {
             final ActorRef httpStepActor =
                     system.actorOf(HttpStep.props(responseStepActor), "httpStepActor" + processGroupId);
             final ActorRef redisStepActor =
-                    system.actorOf(RedisStep.props(httpStepActor), "redisStepActor" + processGroupId);
+                    system.actorOf(RedisStep.props(httpStepActor).withDispatcher("blocking-io-dispatcher"), "redisStepActor" + processGroupId);
+            // fixme block dispatcher
+            //final ActorRef redisStepActor =
+              //      system.actorOf(RedisStep.props(httpStepActor), "redisStepActor" + processGroupId);
             final ActorRef firstStepActor =
                     system.actorOf(FirstStep.props(redisStepActor), "firstStepActor" + processGroupId);
 
@@ -142,6 +145,7 @@ public class SayHelloService {
 
         @Override
         public Receive createReceive() {
+            System.out.println("RedisStep thread name:"+Thread.currentThread().getName()+",id:"+Thread.currentThread().getId());
             return receiveBuilder()
                     .match(Request.class, request -> {
                         LettuceClient.getInstance().get(
@@ -183,6 +187,8 @@ public class SayHelloService {
 
         @Override
         public Receive createReceive() {
+            System.out.println("HttpStep thread name:"+Thread.currentThread().getName());
+
             return receiveBuilder()
                     .match(Request.class, request -> {
 
