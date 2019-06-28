@@ -17,7 +17,7 @@
 	<modules>
 		<module>eurekaserver</module>
 		<module>feignserver1</module>
-		<module>feignserver2</module>
+		<module>feignserver-tomcat</module>
 		<module>reactorserver</module>
 		<module>performanceTestClient</module>
 	</modules>

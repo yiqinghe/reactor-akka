@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>feignserver2</artifactId>
+    <artifactId>feignserver-tomcat</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>feignserver2</name>
+    <name>feignserver-tomcat</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
