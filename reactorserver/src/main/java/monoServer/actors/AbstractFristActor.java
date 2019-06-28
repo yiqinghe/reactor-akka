@@ -11,25 +11,22 @@ import monoServer.Request;
 import monoServer.SayHelloService;
 import reactor.core.publisher.MonoSink;
 
-public abstract class FristActor extends BaseActor {
+public abstract class AbstractFristActor extends BaseActor {
 
-    public FristActor(ActorRef nextStep) {
-        this.nextStep =  nextStep;
-    }
 
     @Override
     public Receive createReceive() {
 
         return receiveBuilder()
                 .match(MonoSink.class, deferredResult -> {
-                    ActorRef atorRef = this.execute(deferredResult);
+                   this.execute(deferredResult);
 
-                    atorRef.tell(deferredResult,getSelf());
+                    //atorRef.tell(deferredResult,getSelf());
                 })
                 .build();
     }
 
-    public abstract Object execute(MonoSink param);
+    public abstract Class<ActorRef> execute(MonoSink param);
 
 
 }

@@ -4,18 +4,16 @@ import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 
+import java.util.Map;
+
 public abstract class BaseActor extends AbstractActor{
 
     //#greeter-messages
     public Props props() {
-        return Props.create(FristActor.class, this);
+        return Props.create(AbstractFristActor.class, this);
     }
 
+    public void setTopo(Map<Class<ActorRef>,ActorRef> actorMap){
 
-    protected ActorRef nextStep;
-
-
-    public void setNextStep(ActorRef nextStep){
-        this.nextStep=nextStep;
     }
 }

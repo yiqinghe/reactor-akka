@@ -5,33 +5,34 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import monoServer.AsynRpcInovker;
 import monoServer.Request;
+import monoServer.common.ActContext;
 import monoServer.http.HttpAsynInovker;
+import monoServer.listener.HttpCommandDoneListener;
+import monoServer.request.HttpRequest;
 import reactor.core.publisher.MonoSink;
 
-public abstract class AbstractAsyncHttpActor extends BaseActor implements HttpAsynInovker.Command.CommandDoneListener{
+public abstract class AbstractAsyncHttpActor extends BaseActor implements HttpCommandDoneListener{
 
-    public AbstractAsyncHttpActor(ActorRef nextStep) {
-        this.nextStep =  nextStep;
-    }
 
     @Override
     public Receive createReceive() {
 
         return receiveBuilder()
-                .match(Object.class, param -> {
-                    this.execute(param);
+                .match(ActContext.class, param -> {
+                    HttpRequest request = this.execute(param);
                 })
                 .build();
     }
 
-    public abstract void execute(Object param);
+    public abstract HttpRequest execute(Object param);
 
-    public abstract void onCommandDone(Request request);
+    public abstract Class<ActorRef> onCommandDone(ActContext context);
 
 
     @Override
-    public void recall(Request request) {
-        onCommandDone(request);
-        nextStep.tell(request,getSelf());
+    public void onHttpCommandDone(ActContext context) {
+        Class<ActorRef> actorRefClass = onCommandDone(context);
+
+        //nextStep.tell(context,getSelf());
     }
 }
