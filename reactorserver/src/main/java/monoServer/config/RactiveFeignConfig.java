@@ -1,4 +1,4 @@
-package monoServer.feignclient.config;
+package monoServer.config;
 
 
 
