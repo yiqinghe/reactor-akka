@@ -1,16 +1,16 @@
 package monoServer.service;
 
 import akka.actor.ActorRef;
-import monoServer.AsynRpcInovker;
 import monoServer.Request;
-import monoServer.actors.AsyncHttpActor;
-import monoServer.actors.FristActor;
+import monoServer.actors.AbstractAsyncHttpActor;
+import monoServer.actors.BaseActor;
 import monoServer.http.HttpAsynInovker;
 
-public class HttpService extends AsyncHttpActor{
+public class AsyncHttpActor extends AbstractAsyncHttpActor {
 
 
-    public HttpService(ActorRef nextStep) {
+
+    public AsyncHttpActor(ActorRef nextStep) {
         super(nextStep);
     }
 
@@ -25,9 +25,16 @@ public class HttpService extends AsyncHttpActor{
     }
 
     @Override
-    public void onCommandDone(Request request) {
+    public ActorRef onCommandDone(Request request) {
         //异步http执行完以后的操作
 
+        if(true){
+
+        }else{
+
+        }
+        context.get(Hello.class)
+        return null;
     }
 
 

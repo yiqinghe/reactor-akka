@@ -22,7 +22,9 @@ public abstract class FristActor extends BaseActor {
 
         return receiveBuilder()
                 .match(MonoSink.class, deferredResult -> {
-                  nextStep.tell(this.execute(deferredResult),getSelf());
+                    ActorRef atorRef = this.execute(deferredResult);
+
+                    atorRef.tell(deferredResult,getSelf());
                 })
                 .build();
     }

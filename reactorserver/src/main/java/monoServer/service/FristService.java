@@ -21,9 +21,20 @@ public class FristService extends FristActor{
      */
 
     @Override
-    public Object execute(MonoSink param) {
+    public ActorRef execute(MonoSink param) {
         //do some thing
-        return new Request(System.currentTimeMillis(), UUID.randomUUID().toString(),param);
+
+        contextData
+        {
+            monoSink,
+                    Map < String, T > businessDate;
+            Request request = new Request(System.currentTimeMillis(), UUID.randomUUID().toString(),param);
+            businessDate.put(request)
+
+        }
+
+                buider
+        return null;
     }
 
 

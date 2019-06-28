@@ -8,9 +8,9 @@ import monoServer.Request;
 import monoServer.http.HttpAsynInovker;
 import reactor.core.publisher.MonoSink;
 
-public abstract class AsyncHttpActor extends BaseActor implements HttpAsynInovker.Command.CommandDoneListener{
+public abstract class AbstractAsyncHttpActor extends BaseActor implements HttpAsynInovker.Command.CommandDoneListener{
 
-    public AsyncHttpActor(ActorRef nextStep) {
+    public AbstractAsyncHttpActor(ActorRef nextStep) {
         this.nextStep =  nextStep;
     }
 
@@ -31,6 +31,7 @@ public abstract class AsyncHttpActor extends BaseActor implements HttpAsynInovke
 
     @Override
     public void recall(Request request) {
+        onCommandDone(request);
         nextStep.tell(request,getSelf());
     }
 }
