@@ -1,7 +1,7 @@
-## Architecture
+## 异步模型
 ![Architecture](doc/image/architecture.png)
 
-## Old
+## 同步模型
 ![Old](doc/image/old.png)
 
 ## 组件选型
