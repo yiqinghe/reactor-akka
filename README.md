@@ -1,5 +1,5 @@
 ## Architecture
-![doc/image/architecture.png](Architecture)
+![Architecture](doc/image/architecture.png)
 
 ## Old
-![doc/image/old.png](Old)
+![Old](doc/image/old.png)
