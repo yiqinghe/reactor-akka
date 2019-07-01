@@ -1,5 +1,6 @@
 package monoServer.feignclient;
 
+import com.netflix.loadbalancer.IRule;
 import feign.Client;
 import feign.Request;
 import feign.Response;

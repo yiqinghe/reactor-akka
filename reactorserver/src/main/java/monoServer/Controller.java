@@ -1,5 +1,9 @@
 package monoServer;
 
+import monoServer.actorImpl.AsyncHttpActor;
+import monoServer.actorImpl.FristActor;
+import monoServer.actors.ActorTopoBuilder;
+import monoServer.enums.ActorGroupIdEnum;
 import monoServer.redission.RedissionClient;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
@@ -43,12 +47,18 @@ public class Controller {
     public  MyRoundLoadBalancer myRoundLoadBalancer;
 
     @RequestMapping(value = "/sayHello")
-    public Mono<String> sayHello() {
+    public Mono<String> sayHello() throws InstantiationException, IllegalAccessException {
       // System.out.println("Request received");
 
         String userId = "12ee";
 
         Mono<String> kk = Mono.just("hello");
+//        ActorTopoBuilder.ActorTopo actorTopoById = ActorTopoBuilder.getActorTopoById(ActorGroupIdEnum.SAY_HELLO);
+//        if(actorTopoById == null) {
+//            new ActorTopoBuilder().setServiceId(ActorGroupIdEnum.SAY_HELLO).frist(FristActor.class).topo(AsyncHttpActor.class).build(null).start();
+//        }else{
+//            actorTopoById.start();
+//        }
 
         //myRoundLoadBalancer.chose("feign-server");
         Mono<String> monoResult = Mono.create(deferredResult->{

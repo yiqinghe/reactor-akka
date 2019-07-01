@@ -9,6 +9,8 @@ import monoServer.AsynRpcInovker.Command;
 import monoServer.Controller;
 import monoServer.Request;
 import monoServer.SayHelloService;
+import monoServer.common.ActContext;
+import monoServer.common.GlobalActorHolder;
 import reactor.core.publisher.MonoSink;
 
 public abstract class AbstractFristActor extends BaseActor {
@@ -18,15 +20,14 @@ public abstract class AbstractFristActor extends BaseActor {
     public Receive createReceive() {
 
         return receiveBuilder()
-                .match(MonoSink.class, deferredResult -> {
-                   this.execute(deferredResult);
-
-                    //atorRef.tell(deferredResult,getSelf());
+                .match(ActContext.class, context -> {
+                    Class<? extends BaseActor> actorRefClass = this.execute(context);
+                    dispatch(actorRefClass,context);
                 })
                 .build();
     }
 
-    public abstract Class<ActorRef> execute(MonoSink param);
+    public abstract Class<? extends BaseActor> execute(ActContext context);
 
 
 }

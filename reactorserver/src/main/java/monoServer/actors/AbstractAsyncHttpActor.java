@@ -7,6 +7,7 @@ import monoServer.AsynRpcInovker;
 import monoServer.Request;
 import monoServer.common.ActContext;
 import monoServer.http.HttpAsynInovker;
+import monoServer.http.HttpAsyncClient;
 import monoServer.listener.HttpCommandDoneListener;
 import monoServer.request.HttpRequest;
 import reactor.core.publisher.MonoSink;
@@ -18,13 +19,17 @@ public abstract class AbstractAsyncHttpActor extends BaseActor implements HttpCo
     public Receive createReceive() {
 
         return receiveBuilder()
-                .match(ActContext.class, param -> {
-                    HttpRequest request = this.execute(param);
+                .match(ActContext.class, context -> {
+                    HttpRequest request = this.execute(context);
+                    //多次http调用 只会纪录上一次的信息
+                    context.setHttpRequest(request);
+                    HttpAsyncClient.Command clientCommand = new HttpAsyncClient.Command(context,System.currentTimeMillis(),this);
+                    HttpAsyncClient.getInstance().asynCall(clientCommand);
                 })
                 .build();
     }
 
-    public abstract HttpRequest execute(Object param);
+    public abstract HttpRequest execute(ActContext context);
 
     public abstract Class<ActorRef> onCommandDone(ActContext context);
 

@@ -10,6 +10,18 @@ public class HttpRequest extends Request{
 
     private String requestBody;
 
+    private String httpResult;
+
+    @Override
+    public String getHttpResult() {
+        return httpResult;
+    }
+
+    @Override
+    public void setHttpResult(String httpResult) {
+        this.httpResult = httpResult;
+    }
+
     public HttpRequest(long requestTime, String uid, MonoSink deferredResult) {
         super(requestTime,uid,deferredResult);
     }

@@ -12,4 +12,5 @@ public class GlobalActorHolder {
     public static ConcurrentHashMap<ActorGroupIdEnum,ActorTopoBuilder.ActorTopo> holders = new ConcurrentHashMap<>();
 
     public static final ActorSystem system = ActorSystem.create("root");
+
 }
