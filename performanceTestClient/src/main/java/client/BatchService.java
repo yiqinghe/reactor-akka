@@ -4,10 +4,15 @@ import akka.actor.ActorRef;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class BatchService {
+
+    Map<BusinessProcess, BusinessProcess> businessProcessMap = new ConcurrentHashMap<>();
+
     @PostConstruct
      public void batchRequest() {
         // 创建根actor,比较耗时的初始化时间2-3秒
@@ -31,16 +36,16 @@ public class BatchService {
                 // 设置多组actor，可以提高吞吐量，对cpu占用也没有明显提高
                 // 禁止每一个请求都生成一组actor来执行，actor资源是不会被gc回收，除非显示关闭。
                 int processGroupId = i % processGroupCount;
-                Main.BusinessProcess businessProcessKey = new Main.BusinessProcess("demo", processGroupId, null, null);
-                Main.BusinessProcess businessProcess = Main.businessProcessMap.get(businessProcessKey);
+                BusinessProcess businessProcessKey = new BusinessProcess("demo", processGroupId, null, null);
+                BusinessProcess businessProcess = businessProcessMap.get(businessProcessKey);
                 if (businessProcess == null) {
                     // 倒序组装依赖，责任链模式
                     final ActorRef secondStepActor =
                             Main.system.actorOf(SecondStep.props(), "secondStepActor" + processGroupId);
                     final ActorRef firstStepActor =
                             Main.system.actorOf(FirstStep.props(secondStepActor), "firstStepActor" + processGroupId);
-                    businessProcess = new Main.BusinessProcess("demo", processGroupId, secondStepActor, firstStepActor);
-                    Main.businessProcessMap.put(businessProcessKey, businessProcess);
+                    businessProcess = new BusinessProcess("demo", processGroupId, secondStepActor, firstStepActor);
+                    businessProcessMap.put(businessProcessKey, businessProcess);
                 }
                 // 模拟请求
                 Main.Request request = new Main.Request(System.currentTimeMillis(), "1", new ContextData());
@@ -72,6 +77,39 @@ public class BatchService {
 //            }
         } catch (Exception ioe) {
             ioe.printStackTrace();
+        }
+    }
+
+    /**
+     * 定义一组业务处理执行单元
+     */
+    static class BusinessProcess {
+        final String business;
+        // 组id
+        final int processGroupId;
+        final ActorRef secondStepActor;
+        final ActorRef firstStepActor;
+
+        public BusinessProcess(String business, int processGroupId, ActorRef secondStepActor, ActorRef firstStepActor) {
+            this.business = business;
+            this.processGroupId = processGroupId;
+            this.secondStepActor = secondStepActor;
+            this.firstStepActor = firstStepActor;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            BusinessProcess that = (BusinessProcess) o;
+            return processGroupId == that.processGroupId &&
+                    Objects.equals(business, that.business);
+        }
+
+        @Override
+        public int hashCode() {
+            // fixme
+            return Objects.hash(business, processGroupId);
         }
     }
 }

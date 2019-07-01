@@ -97,42 +97,6 @@ public class Main {
         }
     }
 
-
-    /**
-     * 定义一组业务处理执行单元
-     */
-    static class BusinessProcess {
-        final String business;
-        // 组id
-        final int processGroupId;
-        final ActorRef secondStepActor;
-        final ActorRef firstStepActor;
-
-        public BusinessProcess(String business, int processGroupId, ActorRef secondStepActor, ActorRef firstStepActor) {
-            this.business = business;
-            this.processGroupId = processGroupId;
-            this.secondStepActor = secondStepActor;
-            this.firstStepActor = firstStepActor;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            BusinessProcess that = (BusinessProcess) o;
-            return processGroupId == that.processGroupId &&
-                    Objects.equals(business, that.business);
-        }
-
-        @Override
-        public int hashCode() {
-            // fixme
-            return Objects.hash(business, processGroupId);
-        }
-    }
-
-    static Map<BusinessProcess, BusinessProcess> businessProcessMap = new ConcurrentHashMap<>();
-
     private static void processParameters(String[] args) {
         if(args != null){
             for (String arg : args) {
