@@ -1,19 +1,13 @@
 package monoServer.actorImpl;
 
-import annotation.AkkaMaper;
-import dao.UserDao;
 import monoServer.actors.AbstractCommonActor;
-import monoServer.actors.AbstractDBActor;
 import monoServer.actors.BaseActor;
 import monoServer.common.ActContext;
 
-public class SyncDBActor extends AbstractDBActor {
-
-    @AkkaMaper("userDao")
-    private UserDao userDao;
-
+public class IntegrateDataActor extends AbstractCommonActor{
     @Override
     public Class<? extends BaseActor> execute(ActContext context) {
+        //处理数据
         return null;
     }
 }

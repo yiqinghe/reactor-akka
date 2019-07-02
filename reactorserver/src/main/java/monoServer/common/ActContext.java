@@ -1,14 +1,16 @@
 package monoServer.common;
 
+import com.google.common.cache.Cache;
 import monoServer.enums.ActorGroupIdEnum;
 import monoServer.request.HttpRequest;
 import reactor.core.publisher.MonoSink;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ActContext {
 
-    private Map<String,Object> businessData;
+    private Map<String,Object> businessData = new HashMap<>();
 
     private String traceId;
 
@@ -17,6 +19,26 @@ public class ActContext {
     private ActorGroupIdEnum actorGroupIdEnum;
 
     private HttpRequest httpRequest;
+
+    private Cache localCache;
+
+    private String localCachekey;
+
+    public Cache getLocalCache() {
+        return localCache;
+    }
+
+    public void setLocalCache(Cache localCache) {
+        this.localCache = localCache;
+    }
+
+    public String getLocalCachekey() {
+        return localCachekey;
+    }
+
+    public void setLocalCachekey(String localCachekey) {
+        this.localCachekey = localCachekey;
+    }
 
     public HttpRequest getHttpRequest() {
         return httpRequest;

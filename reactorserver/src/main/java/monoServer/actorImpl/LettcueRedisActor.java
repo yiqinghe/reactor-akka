@@ -21,8 +21,9 @@ public class LettcueRedisActor extends AbstractLettcueRedisActor {
             return SyncDBActor.class;
         }else{
             //有数据走下一步
+            context.getBusinessData().put("result",result);
+            return IntegrateDataActor.class;
         }
-        return null;
     }
 
     @Override

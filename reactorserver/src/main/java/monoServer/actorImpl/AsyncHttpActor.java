@@ -30,7 +30,7 @@ public class AsyncHttpActor extends AbstractAsyncHttpActor {
         result.put("MSG","OK");
         result.put("DATA",null);
         context.setBusinessData(result);
-        return ResponseActor.class;
+        return LocalCacheActor.class;
     }
 
 
