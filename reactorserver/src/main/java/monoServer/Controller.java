@@ -1,6 +1,6 @@
 package monoServer;
 
-import monoServer.actorImpl.AsyncHttpActor;
+import monoServer.actorImpl.HttpActor;
 import monoServer.actorImpl.SayHelloFristActor;
 import monoServer.actors.ActorTopoBuilder;
 import monoServer.enums.ActorGroupIdEnum;
@@ -57,7 +57,7 @@ public class Controller {
         Mono<String> kk = Mono.just("hello");
             return  ActorTopoBuilder.newBuilder(ActorGroupIdEnum.SAY_HELLO)
                     .frist(SayHelloFristActor.class)
-                    .topo(AsyncHttpActor.class)
+                    .topo(HttpActor.class)
                     .build(requestData)
                     .start();
 //        //myRoundLoadBalancer.chose("feign-server");

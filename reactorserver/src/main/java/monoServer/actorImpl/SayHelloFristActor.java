@@ -21,6 +21,6 @@ public class SayHelloFristActor extends AbstractFirstActor {
     @Override
     public Class<? extends BaseActor> executeAndNext(ActContext context,Object data) {
         // todo do some business
-        return AsyncHttpActor.class;
+        return HttpActor.class;
     }
 }

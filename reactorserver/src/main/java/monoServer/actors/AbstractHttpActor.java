@@ -1,18 +1,11 @@
 package monoServer.actors;
 
-import akka.actor.AbstractActor;
-import akka.actor.ActorRef;
-import akka.actor.Props;
-import monoServer.AsynRpcInovker;
-import monoServer.Request;
 import monoServer.common.ActContext;
-import monoServer.http.HttpAsynInovker;
 import monoServer.http.HttpAsyncClient;
-import monoServer.listener.HttpCommandDoneListener;
+import monoServer.listener.AsynCommandListener;
 import monoServer.request.HttpRequest;
-import reactor.core.publisher.MonoSink;
 
-public abstract class AbstractAsyncHttpActor extends AbstractAsynActor implements HttpCommandDoneListener{
+public abstract class AbstractHttpActor extends AbstractAsynActor {
 
 
     @Override
@@ -31,8 +24,13 @@ public abstract class AbstractAsyncHttpActor extends AbstractAsynActor implement
 
 
     @Override
-    public void onHttpCommandDone(ActContext context,String httpresult) {
+    public void onSuccess(ActContext context, Object httpresult) {
         Class<? extends BaseActor> actorRefClass = executeAndNext(context,httpresult);
         dispatch(actorRefClass,context);
+    }
+
+    @Override
+    public void onFail(ActContext context, Throwable exception) {
+
     }
 }

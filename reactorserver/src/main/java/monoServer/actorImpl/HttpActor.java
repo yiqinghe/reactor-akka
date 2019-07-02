@@ -1,6 +1,6 @@
 package monoServer.actorImpl;
 
-import monoServer.actors.AbstractAsyncHttpActor;
+import monoServer.actors.AbstractHttpActor;
 import monoServer.actors.BaseActor;
 import monoServer.common.ActContext;
 import monoServer.request.HttpRequest;
@@ -8,7 +8,7 @@ import monoServer.request.HttpRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AsyncHttpActor extends AbstractAsyncHttpActor {
+public class HttpActor extends AbstractHttpActor {
 
     @Override
     public HttpRequest buildExecuteData(ActContext context) {

@@ -12,11 +12,6 @@ public class SyncDBActor extends AbstractDBActor {
     private UserDao userDao;
 
     @Override
-    public Class<? extends BaseActor> execute(ActContext context) {
-        return null;
-    }
-
-    @Override
     public Object buildExecuteData(ActContext context) {
         return null;
     }
