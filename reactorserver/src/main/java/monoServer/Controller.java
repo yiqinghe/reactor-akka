@@ -2,6 +2,7 @@ package monoServer;
 
 import monoServer.actorImpl.AsyncHttpActor;
 import monoServer.actorImpl.FristActor;
+import monoServer.actors.ActorTopo;
 import monoServer.actors.ActorTopoBuilder;
 import monoServer.enums.ActorGroupIdEnum;
 import monoServer.redission.RedissionClient;
@@ -53,7 +54,7 @@ public class Controller {
         String userId = "12ee";
 
         Mono<String> kk = Mono.just("hello");
-        ActorTopoBuilder.ActorTopo actorTopoById = ActorTopoBuilder.getActorTopoById(ActorGroupIdEnum.SAY_HELLO);
+        ActorTopo actorTopoById = ActorTopoBuilder.getActorTopoById(ActorGroupIdEnum.SAY_HELLO);
         if(actorTopoById == null) {
             return new ActorTopoBuilder().setServiceId(ActorGroupIdEnum.SAY_HELLO).frist(FristActor.class).topo(AsyncHttpActor.class).build(null).start();
         }else{

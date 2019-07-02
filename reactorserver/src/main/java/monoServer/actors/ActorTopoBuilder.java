@@ -1,18 +1,12 @@
 package monoServer.actors;
 
 import akka.actor.ActorRef;
-import akka.actor.Props;
-import akka.actor.RepointableActorRef;
-import monoServer.SayHelloService;
-import monoServer.common.ActContext;
+
 import monoServer.common.GlobalActorHolder;
 import monoServer.enums.ActorGroupIdEnum;
-import org.apache.commons.lang.ClassUtils;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
-
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import monoServer.actors.ActorTopo;
+
 
 public class ActorTopoBuilder {
 
@@ -100,66 +94,6 @@ public class ActorTopoBuilder {
     }
 
 
-    public class ActorTopo {
 
-        private Class<? extends BaseActor> frist;
 
-        private Class<? extends BaseActor>[] actorClasses;
-
-        private Map<String,Object> params;
-
-        private Map<Class<? extends BaseActor>,List<ActorRef>> totalActors;
-
-        private ActorGroupIdEnum actorGroupIdEnum;
-
-        private AtomicInteger nextServerCyclicCounter;
-
-        public Map<Class<? extends BaseActor>, List<ActorRef>> getTotalActors() {
-            return totalActors;
-        }
-
-        public void setTotalActors(Map<Class<? extends BaseActor>, List<ActorRef>> totalActors) {
-            this.totalActors = totalActors;
-        }
-
-        public ActorTopo(Class<? extends BaseActor> frist, Class<? extends BaseActor>[] actorClasses, Map<String, Object> params
-                , ActorGroupIdEnum actorGroupIdEnum, Map<Class<? extends BaseActor>,List<ActorRef>> totalActors) {
-            this.frist = frist;
-            this.actorClasses = actorClasses;
-            this.params = params;
-            this.totalActors = totalActors;
-            this.actorGroupIdEnum = actorGroupIdEnum;
-            this.nextServerCyclicCounter = new AtomicInteger(0);
-        }
-
-        public Mono<String> start(){
-
-            Mono<String> monoResult = Mono.create(deferredResult->{
-
-                ActContext context = new ActContext();
-                context.setBusinessData(params);
-                context.setMonoSink(deferredResult);
-                context.setActorGroupIdEnum(actorGroupIdEnum);
-                totalActors.get(frist).get(incrementAndGetModulo(20)).tell(context,ActorRef.noSender());
-            });
-            return monoResult;
-        }
-
-        private int incrementAndGetModulo(int modulo) {
-            for (;;) {
-                int current = nextServerCyclicCounter.get();
-                int next = (current + 1) % modulo;
-                if (nextServerCyclicCounter.compareAndSet(current, next))
-                    return next;
-            }
-        }
-
-    }
-
-    public static void main(String[] args) {
-        final ActorRef responseStepActor =
-                GlobalActorHolder.system.actorOf(SayHelloService.ResponseStep.props(), "responseStepActor" + 1);
-        final ActorRef httpStepActor =
-                GlobalActorHolder.system.actorOf(SayHelloService.HttpStep.props(responseStepActor), "httpStepActor" + 1);
-    }
 }

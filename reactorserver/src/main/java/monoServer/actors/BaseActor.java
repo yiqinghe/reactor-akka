@@ -23,9 +23,6 @@ public abstract class BaseActor extends AbstractActor{
         return Props.create(actorClass);
     }
 
-    private static AtomicInteger nextServerCyclicCounter = new AtomicInteger(0);
-
-
     public void dispatch(Class<? extends BaseActor> actorRefClass, ActContext context){
         if(actorRefClass == null){
             actorRefClass = ResponseActor.class;
@@ -35,8 +32,9 @@ public abstract class BaseActor extends AbstractActor{
         ActorRef nextRef = actorRefs.get(incrementAndGetModulo(20));
         nextRef.tell(context,getSelf());
     }
+    private  AtomicInteger nextServerCyclicCounter = new AtomicInteger(0);
 
-    private int incrementAndGetModulo(int modulo) {
+    protected int incrementAndGetModulo(int modulo) {
         for (;;) {
             int current = nextServerCyclicCounter.get();
             int next = (current + 1) % modulo;
