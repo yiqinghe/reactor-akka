@@ -12,7 +12,7 @@ import monoServer.listener.HttpCommandDoneListener;
 import monoServer.request.HttpRequest;
 import reactor.core.publisher.MonoSink;
 
-public abstract class AbstractAsyncHttpActor extends BaseActor implements HttpCommandDoneListener{
+public abstract class AbstractAsyncHttpActor extends AbstractAsynActor implements HttpCommandDoneListener{
 
 
     @Override

@@ -8,7 +8,7 @@ import monoServer.lettuce.LettuceClient;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class AbstractLettcueRedisActor extends BaseActor {
+public abstract class AbstractLettcueRedisActor extends AbstractAsynActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()

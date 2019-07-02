@@ -22,7 +22,7 @@ public class LettcueRedisActor extends AbstractLettcueRedisActor {
             return SyncDBActor.class;
         }else{
             //有数据走下一步
-            context.getBusinessData().put("result",result);
+             context.getContextData().put("LettcueRedisActorResult",result);
             return IntegrateDataActor.class;
         }
     }

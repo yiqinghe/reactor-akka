@@ -1,9 +1,7 @@
 package monoServer.actorImpl;
 
-import akka.actor.ActorRef;
 import monoServer.actors.AbstractAsyncHttpActor;
 import monoServer.actors.BaseActor;
-import monoServer.actors.ResponseActor;
 import monoServer.common.ActContext;
 import monoServer.request.HttpRequest;
 
@@ -25,7 +23,7 @@ public class AsyncHttpActor extends AbstractAsyncHttpActor {
         result.put("CODE","200");
         result.put("MSG","OK");
         result.put("DATA",null);
-        context.setBusinessData(result);
+        context.setResponseData(result);
         return null;
     }
 }

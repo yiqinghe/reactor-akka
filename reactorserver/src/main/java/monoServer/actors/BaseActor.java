@@ -41,7 +41,20 @@ public abstract class BaseActor extends AbstractActor{
         }
     }
 
+    /**
+     * 组装需要执行数据
+     * @param context
+     * @return
+     */
     public abstract Object buildExecuteData(ActContext context);
 
+    /**
+     * 执行完后，拿到结果数据，根据结果数据决定下一个执行步骤
+     * 如果不需要执行，直接返回null，系统自动将context.responseData返回。
+     * 如果context.responseData为空,组装默认返回数据
+     * @param context
+     * @param data
+     * @return
+     */
     public abstract Class<? extends BaseActor> executeAndNext(ActContext context,Object data);
 }

@@ -1,8 +1,7 @@
 package monoServer;
 
 import monoServer.actorImpl.AsyncHttpActor;
-import monoServer.actorImpl.FristActor;
-import monoServer.actors.ActorTopo;
+import monoServer.actorImpl.SayHelloFristActor;
 import monoServer.actors.ActorTopoBuilder;
 import monoServer.enums.ActorGroupIdEnum;
 import monoServer.redission.RedissionClient;
@@ -14,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -51,12 +52,13 @@ public class Controller {
     public Mono<String> sayHello() throws InstantiationException, IllegalAccessException {
       // System.out.println("Request received");
 
-        String userId = "12ee";
+        Map<String,Object> requestData = new HashMap<>();
+        requestData.put("userId","16999999");
         Mono<String> kk = Mono.just("hello");
             return  ActorTopoBuilder.newBuilder(ActorGroupIdEnum.SAY_HELLO)
-                    .frist(FristActor.class)
+                    .frist(SayHelloFristActor.class)
                     .topo(AsyncHttpActor.class)
-                    .build(null)
+                    .build(requestData)
                     .start();
 //        //myRoundLoadBalancer.chose("feign-server");
 //        Mono<String> monoResult = Mono.create(deferredResult->{
