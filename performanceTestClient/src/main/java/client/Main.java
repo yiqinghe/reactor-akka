@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @SpringBootApplication
 public class Main {
     // 请求总数
-    static long sumCount = 10000;
+    static long sumCount = 10;
     public static int setConnectTimeout = 1000;
     public static int setSocketTimeout = 1000;
     public static int setConnectionRequestTimeout = 1000;

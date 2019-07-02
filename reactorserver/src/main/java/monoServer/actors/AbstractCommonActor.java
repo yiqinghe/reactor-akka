@@ -15,19 +15,20 @@ import reactor.core.publisher.MonoSink;
 
 public abstract class AbstractCommonActor extends BaseActor {
 
+    @Override
+    public  Object buildExcuteData(ActContext context){
+        return null;
+    }
 
     @Override
     public Receive createReceive() {
 
         return receiveBuilder()
                 .match(ActContext.class, context -> {
-                    Class<? extends BaseActor> actorRefClass = this.execute(context);
+                    Class<? extends BaseActor> actorRefClass = this.excuteAndNext(context,null);
                     dispatch(actorRefClass,context);
                 })
                 .build();
     }
-
-    public abstract Class<? extends BaseActor> execute(ActContext context);
-
 
 }

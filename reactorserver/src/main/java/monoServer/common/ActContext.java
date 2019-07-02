@@ -20,26 +20,6 @@ public class ActContext {
 
     private HttpRequest httpRequest;
 
-    private Cache localCache;
-
-    private String localCachekey;
-
-    public Cache getLocalCache() {
-        return localCache;
-    }
-
-    public void setLocalCache(Cache localCache) {
-        this.localCache = localCache;
-    }
-
-    public String getLocalCachekey() {
-        return localCachekey;
-    }
-
-    public void setLocalCachekey(String localCachekey) {
-        this.localCachekey = localCachekey;
-    }
-
     public HttpRequest getHttpRequest() {
         return httpRequest;
     }

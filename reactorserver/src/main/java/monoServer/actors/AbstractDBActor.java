@@ -12,7 +12,7 @@ import monoServer.common.ActContext;
 
 import java.lang.reflect.Field;
 
-public abstract class AbstractDBActor extends BaseActor{
+public abstract class AbstractDBActor extends AbstractBlockActor{
 
     //#greeter-messages
     public static Props props(Class<? extends BaseActor> actorClass) throws IllegalAccessException, InstantiationException {

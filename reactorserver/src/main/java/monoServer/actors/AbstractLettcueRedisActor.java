@@ -13,30 +13,28 @@ public abstract class AbstractLettcueRedisActor extends BaseActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(ActContext.class, context -> {
-                    this.execute(context);
+                    Object o= this.buildExcuteData(context);
+                    excuteComand("",context);
                 })
                 .build();
     }
 
-    public abstract void execute(ActContext context);
-
-    public abstract Class<? extends BaseActor> onCompeletedListener(List<String> result,ActContext context);
+    public void onCompeletedListener(List<String> result,ActContext context){
+        Class<? extends BaseActor> actorRefClass =  excuteAndNext(context,result);
+        dispatch(actorRefClass,context);
+    }
 
     public abstract Class<? extends BaseActor> onErrorListener(Object error,ActContext context);
 
 
 
-    public void asyncGet(String key,ActContext context){
-        LettuceClient.getInstance().get(key,list->{
-            Cache localCache = context.getLocalCache();
-            if(localCache != null && localCache.getIfPresent(context.getLocalCachekey()) == null){
-                localCache.put(context.getLocalCachekey(),list);
-            }
-            dispatch(onCompeletedListener(list,context),context);
+    public void excuteComand(String key,ActContext context){
+        if("get".equals("get")){
 
-        },error->{
-            dispatch(onErrorListener(error,context),context);
-        });
+            LettuceClient.getInstance().get(key,
+                    list->onCompeletedListener(list,context),
+                    error->dispatch(onErrorListener(error,context),context));
+        }
     }
 
 }

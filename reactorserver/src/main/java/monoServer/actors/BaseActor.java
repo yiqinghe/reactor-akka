@@ -6,11 +6,12 @@ import akka.actor.Props;
 import akka.japi.Creator;
 import monoServer.common.ActContext;
 import monoServer.common.GlobalActorHolder;
+import monoServer.request.HttpRequest;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class BaseActor extends AbstractActor{
+public abstract class BaseActor <E,R> extends AbstractActor{
 
     public BaseActor() {
     }
@@ -39,4 +40,8 @@ public abstract class BaseActor extends AbstractActor{
                 return next;
         }
     }
+
+    public abstract E buildExcuteData(ActContext context);
+
+    public abstract Class<? extends BaseActor> excuteAndNext(ActContext context,R data);
 }

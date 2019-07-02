@@ -8,14 +8,15 @@ import java.util.List;
 
 public class LettcueRedisActor extends AbstractLettcueRedisActor {
 
-
     @Override
-    public void execute(ActContext context) {
-       asyncGet("test1",context);
+    public Object buildExcuteData(ActContext context) {
+       return null;
     }
 
     @Override
-    public Class<? extends BaseActor> onCompeletedListener(List<String> result,ActContext context) {
+    public Class<? extends BaseActor> excuteAndNext(ActContext context, Object data) {
+        List<String> result = (List<String>)data;
+
         if(result == null || result.size() < 1){
             //redis获取不到数据走DB
             return SyncDBActor.class;
