@@ -172,7 +172,7 @@ public class SayHelloService {
     /**
      * 从http异步获取值
      */
-    static class HttpStep extends AbstractActor {
+   public static class HttpStep extends AbstractActor {
         //#greeter-messages
         static public Props props(ActorRef responseStepActor) {
             return Props.create(HttpStep.class, () -> new HttpStep(responseStepActor));
@@ -209,7 +209,7 @@ public class SayHelloService {
     /**
      * 专门最后输出给前端的步骤
      */
-    static class ResponseStep extends AbstractActor {
+   public static class ResponseStep extends AbstractActor {
         //#greeter-messages
         static public Props props() {
             return Props.create(ResponseStep.class, () -> new ResponseStep());

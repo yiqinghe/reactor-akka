@@ -31,13 +31,12 @@ public abstract class AbstractAsyncHttpActor extends BaseActor implements HttpCo
 
     public abstract HttpRequest execute(ActContext context);
 
-    public abstract Class<ActorRef> onCommandDone(ActContext context);
+    public abstract Class<? extends BaseActor> onCommandDone(ActContext context);
 
 
     @Override
     public void onHttpCommandDone(ActContext context) {
-        Class<ActorRef> actorRefClass = onCommandDone(context);
-
-        //nextStep.tell(context,getSelf());
+        Class<? extends BaseActor> actorRefClass = onCommandDone(context);
+        dispatch(actorRefClass,context);
     }
 }

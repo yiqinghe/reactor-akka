@@ -23,11 +23,15 @@ public abstract class BaseActor extends AbstractActor{
         return Props.create(actorClass);
     }
 
-    private AtomicInteger nextServerCyclicCounter = new AtomicInteger(0);
+    private static AtomicInteger nextServerCyclicCounter = new AtomicInteger(0);
 
 
     public void dispatch(Class<? extends BaseActor> actorRefClass, ActContext context){
-        List<ActorRef> actorRefs = GlobalActorHolder.holders.get(context.getActorGroupIdEnum()).;
+        if(actorRefClass == null){
+            actorRefClass = ResponseActor.class;
+        }
+        List<ActorRef> actorRefs = GlobalActorHolder.holders
+                .get(context.getActorGroupIdEnum()).getTotalActors().get(actorRefClass);
         ActorRef nextRef = actorRefs.get(incrementAndGetModulo(20));
         nextRef.tell(context,getSelf());
     }

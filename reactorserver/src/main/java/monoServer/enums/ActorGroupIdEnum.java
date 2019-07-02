@@ -1,24 +1,15 @@
 package monoServer.enums;
 
 public enum ActorGroupIdEnum {
-    SAY_HELLO("sayhello","123");
+    SAY_HELLO("sayhello123");
 
-    private String serviceName;
 
     private String serviceId;
 
-    ActorGroupIdEnum(String serviceName, String serviceId) {
-        this.serviceName = serviceName;
+    ActorGroupIdEnum(String serviceId) {
         this.serviceId = serviceId;
     }
 
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-    }
 
     public String getServiceId() {
         return serviceId;

@@ -1,6 +1,7 @@
 package monoServer.actors;
 
 import akka.actor.AbstractActor;
+import com.alibaba.fastjson.JSON;
 import monoServer.Request;
 import monoServer.common.ActContext;
 
@@ -10,7 +11,7 @@ public class ResponseActor extends BaseActor {
         return receiveBuilder()
                 .match(ActContext.class, context -> {
 
-                    context.getMonoSink().success("Hello");
+                    context.getMonoSink().success(JSON.toJSONString(context.getBusinessData()));
 
                 })
                 .build();

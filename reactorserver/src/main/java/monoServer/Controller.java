@@ -53,28 +53,28 @@ public class Controller {
         String userId = "12ee";
 
         Mono<String> kk = Mono.just("hello");
-//        ActorTopoBuilder.ActorTopo actorTopoById = ActorTopoBuilder.getActorTopoById(ActorGroupIdEnum.SAY_HELLO);
-//        if(actorTopoById == null) {
-//            new ActorTopoBuilder().setServiceId(ActorGroupIdEnum.SAY_HELLO).frist(FristActor.class).topo(AsyncHttpActor.class).build(null).start();
-//        }else{
-//            actorTopoById.start();
-//        }
-
-        //myRoundLoadBalancer.chose("feign-server");
-        Mono<String> monoResult = Mono.create(deferredResult->{
-            String hhhh =userId;
-            String kvalue = kk.block();
-            sayHelloService.sayHello(deferredResult);
-        });
-
-
-      // System.out.println("Servlet thread released");
-
-        if(acceptCount.addAndGet(1)%10000==0){
-            System.out.println("acceptCount:"+acceptCount);
+        ActorTopoBuilder.ActorTopo actorTopoById = ActorTopoBuilder.getActorTopoById(ActorGroupIdEnum.SAY_HELLO);
+        if(actorTopoById == null) {
+            return new ActorTopoBuilder().setServiceId(ActorGroupIdEnum.SAY_HELLO).frist(FristActor.class).topo(AsyncHttpActor.class).build(null).start();
+        }else{
+            return actorTopoById.start();
         }
 
-        return monoResult;
+//        //myRoundLoadBalancer.chose("feign-server");
+//        Mono<String> monoResult = Mono.create(deferredResult->{
+//            String hhhh =userId;
+//            String kvalue = kk.block();
+//            sayHelloService.sayHello(deferredResult);
+//        });
+//
+//
+//      // System.out.println("Servlet thread released");
+//
+//        if(acceptCount.addAndGet(1)%10000==0){
+//            System.out.println("acceptCount:"+acceptCount);
+//        }
+//
+//        return monoResult;
     }
 
 

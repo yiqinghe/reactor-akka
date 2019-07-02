@@ -59,7 +59,8 @@ public class ActorTopoBuilder {
         for (Class<? extends BaseActor> actorClass: actorClasses) {
             actorList = new ArrayList<>();
             for (int i = 0; i < 20; i++) {
-                ActorRef actorRef = GlobalActorHolder.system.actorOf(BaseActor.props(actorClass), actorGroupIdEnum.getServiceName() + "_" + actorGroupIdEnum.getServiceId());
+                ActorRef actorRef = GlobalActorHolder.system.actorOf(BaseActor.props(actorClass)
+                        ,  actorGroupIdEnum.getServiceId()+"_"+actorClass.getSimpleName()+"_"+i);
                 actorList.add(actorRef);
             }
             //RepointableActorRef
@@ -68,10 +69,19 @@ public class ActorTopoBuilder {
         //把frist也要添加进去
         actorList = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            ActorRef actorRef = GlobalActorHolder.system.actorOf(BaseActor.props(frist), actorGroupIdEnum.getServiceName() + "_" + actorGroupIdEnum.getServiceId());
+            ActorRef actorRef = GlobalActorHolder.system.actorOf(BaseActor.props(frist)
+                    , actorGroupIdEnum.getServiceId()+"_"+frist.getSimpleName()+"_"+i);
             actorList.add(actorRef);
         }
         totalActors.put(frist,actorList);
+        //把response也要添加进去
+        actorList = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            ActorRef actorRef = GlobalActorHolder.system.actorOf(BaseActor.props(ResponseActor.class)
+                    , actorGroupIdEnum.getServiceId()+"_"+ResponseActor.class.getSimpleName()+"_"+i);
+            actorList.add(actorRef);
+        }
+        totalActors.put(ResponseActor.class,actorList);
 
         actorTopo = new ActorTopo(frist,actorClasses,params,actorGroupIdEnum,totalActors);
         GlobalActorHolder.holders.put(actorGroupIdEnum,actorTopo);
