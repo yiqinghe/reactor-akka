@@ -13,7 +13,7 @@ public abstract class AbstractHttpActor extends AbstractAsynActor {
 
         return receiveBuilder()
                 .match(ActContext.class, context -> {
-                    HttpRequest request = (HttpRequest) this.buildExecuteData(context);
+                    HttpRequest request = this.buildExecuteData(context);
                     //多次http调用 只会纪录上一次的信息
                     HttpAsyncClient.Command clientCommand = new HttpAsyncClient.Command(context
                             ,System.currentTimeMillis(),this,request);
@@ -22,6 +22,12 @@ public abstract class AbstractHttpActor extends AbstractAsynActor {
                 .build();
     }
 
+    /**
+     * 需要实现要发起请求的url，body信息等
+     * @param context
+     * @return
+     */
+    public abstract HttpRequest buildExecuteData(ActContext context);
 
     @Override
     public void onSuccess(ActContext context, Object httpresult) {

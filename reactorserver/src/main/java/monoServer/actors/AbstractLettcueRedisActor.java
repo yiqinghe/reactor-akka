@@ -5,6 +5,7 @@ import com.google.common.cache.Cache;
 import monoServer.common.ActContext;
 import monoServer.enums.RedisCommandEnum;
 import monoServer.lettuce.LettuceClient;
+import monoServer.request.HttpRequest;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -16,7 +17,7 @@ public abstract class AbstractLettcueRedisActor extends AbstractAsynActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(ActContext.class, context -> {
-                    RedisCommand redisCommand= (RedisCommand) this.buildExecuteData(context);
+                    RedisCommand redisCommand= this.buildExecuteData(context);
                     excuteComand(redisCommand,context);
                 })
                 .build();
@@ -27,6 +28,13 @@ public abstract class AbstractLettcueRedisActor extends AbstractAsynActor {
         Class<? extends BaseActor> actorRefClass =  executeAndNext(context,result);
         dispatch(actorRefClass,context);
     }
+
+    /**
+     * 需要实现要发起redis请求的命令、key等信息
+     * @param context
+     * @return
+     */
+    public abstract RedisCommand buildExecuteData(ActContext context);
 
     @Override
     public void onFail(ActContext context, Throwable exception) {
