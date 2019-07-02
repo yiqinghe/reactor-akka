@@ -3,14 +3,10 @@ package monoServer.actors;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import akka.japi.Creator;
-import monoServer.actorImpl.FristActor;
 import monoServer.common.ActContext;
 import monoServer.common.GlobalActorHolder;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class BaseActor extends AbstractActor{

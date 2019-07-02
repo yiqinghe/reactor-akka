@@ -1,4 +1,4 @@
 package monoServer.actorImpl;
 
-public class SyncDBActor {
+public class SyncDBActor extends FristActor {
 }

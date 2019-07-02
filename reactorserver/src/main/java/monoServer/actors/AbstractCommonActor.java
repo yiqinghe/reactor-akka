@@ -13,7 +13,7 @@ import monoServer.common.ActContext;
 import monoServer.common.GlobalActorHolder;
 import reactor.core.publisher.MonoSink;
 
-public abstract class AbstractFristActor extends BaseActor {
+public abstract class AbstractCommonActor extends BaseActor {
 
 
     @Override
