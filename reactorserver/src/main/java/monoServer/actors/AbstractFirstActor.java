@@ -30,4 +30,13 @@ public abstract class AbstractFirstActor extends AbstractAsynActor {
                 .build();
     }
 
+    @Override
+    public void onSuccess(ActContext context, Object result) {
+    }
+
+    @Override
+    public void onFail(ActContext context, Throwable exception) {
+
+    }
+
 }
