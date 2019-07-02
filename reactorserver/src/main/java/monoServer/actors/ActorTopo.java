@@ -13,7 +13,6 @@ public class ActorTopo {
 
     private Class<? extends BaseActor> frist;
 
-    private Class<? extends BaseActor>[] actorClasses;
 
     private Map<String,Object> params;
 
@@ -27,14 +26,17 @@ public class ActorTopo {
         return totalActors;
     }
 
-    public void setTotalActors(Map<Class<? extends BaseActor>, List<ActorRef>> totalActors) {
-        this.totalActors = totalActors;
+    public Map<String, Object> getParams() {
+        return params;
     }
 
-    public ActorTopo(Class<? extends BaseActor> frist, Class<? extends BaseActor>[] actorClasses, Map<String, Object> params
+    public void setParams(Map<String, Object> params) {
+        this.params = params;
+    }
+
+    public ActorTopo(Class<? extends BaseActor> frist, Map<String, Object> params
             , ActorGroupIdEnum actorGroupIdEnum, Map<Class<? extends BaseActor>,List<ActorRef>> totalActors) {
         this.frist = frist;
-        this.actorClasses = actorClasses;
         this.params = params;
         this.totalActors = totalActors;
         this.actorGroupIdEnum = actorGroupIdEnum;

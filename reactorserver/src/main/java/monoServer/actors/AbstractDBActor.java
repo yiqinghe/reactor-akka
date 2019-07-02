@@ -31,15 +31,6 @@ public abstract class AbstractDBActor extends AbstractBlockActor{
         });
     }
 
-    public static void main(String[] args) throws ClassNotFoundException {
-        Field[] declaredFields = HttpCommand.class.getDeclaredFields();
-        for (Field field:declaredFields) {
-            if(field.getAnnotation(AkkaMaper.class) != null){
-                Class<?> aClass = Class.forName(field.getType().getName());
-                System.out.println(field.getType().getName());
-            }
-        }
-    }
 
     @Override
     public Receive createReceive() {

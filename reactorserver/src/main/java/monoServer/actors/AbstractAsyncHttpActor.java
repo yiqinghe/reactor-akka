@@ -20,10 +20,10 @@ public abstract class AbstractAsyncHttpActor extends BaseActor implements HttpCo
 
         return receiveBuilder()
                 .match(ActContext.class, context -> {
-                    HttpRequest request = this.buildExcuteData(context);
+                    HttpRequest request = (HttpRequest) this.buildExecuteData(context);
                     //多次http调用 只会纪录上一次的信息
-                    context.setHttpRequest(request);
-                    HttpAsyncClient.Command clientCommand = new HttpAsyncClient.Command(context,System.currentTimeMillis(),this);
+                    HttpAsyncClient.Command clientCommand = new HttpAsyncClient.Command(context
+                            ,System.currentTimeMillis(),this,request);
                     HttpAsyncClient.getInstance().asynCall(clientCommand);
                 })
                 .build();
@@ -31,8 +31,8 @@ public abstract class AbstractAsyncHttpActor extends BaseActor implements HttpCo
 
 
     @Override
-    public void onHttpCommandDone(ActContext context) {
-        Class<? extends BaseActor> actorRefClass = excuteAndNext(context);
+    public void onHttpCommandDone(ActContext context,String httpresult) {
+        Class<? extends BaseActor> actorRefClass = executeAndNext(context,httpresult);
         dispatch(actorRefClass,context);
     }
 }

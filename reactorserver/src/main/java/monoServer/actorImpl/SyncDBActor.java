@@ -16,4 +16,14 @@ public class SyncDBActor extends AbstractDBActor {
     public Class<? extends BaseActor> execute(ActContext context) {
         return null;
     }
+
+    @Override
+    public Object buildExecuteData(ActContext context) {
+        return null;
+    }
+
+    @Override
+    public Class<? extends BaseActor> executeAndNext(ActContext context, Object data) {
+        return null;
+    }
 }

@@ -11,7 +11,7 @@ import monoServer.request.HttpRequest;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class BaseActor <E,R> extends AbstractActor{
+public abstract class BaseActor extends AbstractActor{
 
     public BaseActor() {
     }
@@ -41,7 +41,7 @@ public abstract class BaseActor <E,R> extends AbstractActor{
         }
     }
 
-    public abstract E buildExcuteData(ActContext context);
+    public abstract Object buildExecuteData(ActContext context);
 
-    public abstract Class<? extends BaseActor> excuteAndNext(ActContext context,R data);
+    public abstract Class<? extends BaseActor> executeAndNext(ActContext context,Object data);
 }

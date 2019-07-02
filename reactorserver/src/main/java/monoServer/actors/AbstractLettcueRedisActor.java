@@ -13,14 +13,14 @@ public abstract class AbstractLettcueRedisActor extends BaseActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(ActContext.class, context -> {
-                    Object o= this.buildExcuteData(context);
+                    Object o= this.buildExecuteData(context);
                     excuteComand("",context);
                 })
                 .build();
     }
 
     public void onCompeletedListener(List<String> result,ActContext context){
-        Class<? extends BaseActor> actorRefClass =  excuteAndNext(context,result);
+        Class<? extends BaseActor> actorRefClass =  executeAndNext(context,result);
         dispatch(actorRefClass,context);
     }
 

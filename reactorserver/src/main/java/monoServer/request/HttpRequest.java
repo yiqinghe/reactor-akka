@@ -4,13 +4,23 @@ import monoServer.Request;
 import reactor.core.publisher.MonoSink;
 
 public class HttpRequest{
-    private String requestMethod;
+    private feign.Request.HttpMethod requestMethod;
 
     private String requestUrl;
 
     private String requestBody;
 
     private String httpResult;
+
+    private String serviceName;
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
 
     public String getHttpResult() {
         return httpResult;
@@ -20,11 +30,11 @@ public class HttpRequest{
         this.httpResult = httpResult;
     }
 
-    public String getRequestMethod() {
+    public feign.Request.HttpMethod getRequestMethod() {
         return requestMethod;
     }
 
-    public void setRequestMethod(String requestMethod) {
+    public void setRequestMethod(feign.Request.HttpMethod requestMethod) {
         this.requestMethod = requestMethod;
     }
 

@@ -16,7 +16,7 @@ import reactor.core.publisher.MonoSink;
 public abstract class AbstractCommonActor extends BaseActor {
 
     @Override
-    public  Object buildExcuteData(ActContext context){
+    public  Object buildExecuteData(ActContext context){
         return null;
     }
 
@@ -25,7 +25,7 @@ public abstract class AbstractCommonActor extends BaseActor {
 
         return receiveBuilder()
                 .match(ActContext.class, context -> {
-                    Class<? extends BaseActor> actorRefClass = this.excuteAndNext(context,null);
+                    Class<? extends BaseActor> actorRefClass = this.executeAndNext(context,null);
                     dispatch(actorRefClass,context);
                 })
                 .build();

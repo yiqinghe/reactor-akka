@@ -9,12 +9,12 @@ import java.util.List;
 public class LettcueRedisActor extends AbstractLettcueRedisActor {
 
     @Override
-    public Object buildExcuteData(ActContext context) {
+    public Object buildExecuteData(ActContext context) {
        return null;
     }
 
     @Override
-    public Class<? extends BaseActor> excuteAndNext(ActContext context, Object data) {
+    public Class<? extends BaseActor> executeAndNext(ActContext context, Object data) {
         List<String> result = (List<String>)data;
 
         if(result == null || result.size() < 1){

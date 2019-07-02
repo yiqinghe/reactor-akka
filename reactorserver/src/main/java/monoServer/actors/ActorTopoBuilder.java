@@ -2,6 +2,8 @@ package monoServer.actors;
 
 import akka.actor.ActorRef;
 
+import javafx.util.Builder;
+import jodd.util.CollectionUtil;
 import monoServer.common.GlobalActorHolder;
 import monoServer.enums.ActorGroupIdEnum;
 import java.util.*;
@@ -12,7 +14,7 @@ public class ActorTopoBuilder {
 
     private Class<? extends BaseActor> frist;
 
-    private Class<? extends BaseActor>[] actorClasses;
+    private Set<Class<? extends BaseActor>> actorClasses;
 
     private ActorGroupIdEnum actorGroupIdEnum;
 
@@ -20,17 +22,27 @@ public class ActorTopoBuilder {
 
     private ActorTopo actorTopo;
 
+    public static ActorTopoBuilder newBuilder(ActorGroupIdEnum actorGroupIdEnum){
+        return new ActorTopoBuilder(actorGroupIdEnum);
+    }
+
+    private ActorTopoBuilder(ActorGroupIdEnum actorGroupIdEnum){
+        this.actorGroupIdEnum = actorGroupIdEnum;
+    }
+
     public ActorTopoBuilder topo(Class<? extends BaseActor>... actorClasses) throws IllegalAccessException, InstantiationException {
         if(this.actorTopo != null){
             return this;
         }
-        this.actorClasses = actorClasses;
-
+        if(actorClasses != null) {
+            this.actorClasses = new HashSet<>(Arrays.asList(actorClasses));
+        }
         return this;
     }
 
     public ActorTopoBuilder frist(Class<? extends BaseActor> actor){
         if(this.actorTopo != null){
+
             return this;
         }
         this.frist = actor;
@@ -39,6 +51,7 @@ public class ActorTopoBuilder {
 
     public ActorTopo build(Map<String,Object> params) throws InstantiationException, IllegalAccessException {
         if(this.actorTopo != null){
+            actorTopo.setParams(params);
             return actorTopo;
         }
         if(frist == null){
@@ -55,7 +68,7 @@ public class ActorTopoBuilder {
             for (int i = 0; i < 20; i++) {
                 ActorRef actorRef = GlobalActorHolder.system.actorOf(BaseActor.props(actorClass)
                         ,  actorGroupIdEnum.getServiceId()+"_"+actorClass.getSimpleName()+"_"+i);
-                actorList.add(actorRef);
+                 actorList.add(actorRef);
             }
             //RepointableActorRef
             totalActors.put(actorClass,actorList);
@@ -77,7 +90,7 @@ public class ActorTopoBuilder {
         }
         totalActors.put(ResponseActor.class,actorList);
 
-        actorTopo = new ActorTopo(frist,actorClasses,params,actorGroupIdEnum,totalActors);
+        actorTopo = new ActorTopo(frist,params,actorGroupIdEnum,totalActors);
         GlobalActorHolder.holders.put(actorGroupIdEnum,actorTopo);
         return actorTopo;
     }

@@ -28,15 +28,18 @@ public class HttpAsyncClient {
         public ActContext context;
         final public long startTime;
         public ServiceInstance serviceInstance;
+        private final monoServer.request.HttpRequest httpRequest;
 
 
 
         final public HttpCommandDoneListener commandDoneListener;
 
-        public Command(ActContext context, long startTime, HttpCommandDoneListener commandDoneListener) {
+        public Command(ActContext context, long startTime, HttpCommandDoneListener commandDoneListener
+        ,monoServer.request.HttpRequest httpRequest) {
             this.context = context;
             this.startTime = startTime;
             this.commandDoneListener = commandDoneListener;
+            this.httpRequest = httpRequest;
         }
 
     }
@@ -47,9 +50,13 @@ public class HttpAsyncClient {
     public HttpAsyncClient asynCall(Command command) {
 
         MyRoundLoadBalancer myRoundLoadBalancer = SpringContext.getBean(MyRoundLoadBalancer.class);
-        ServiceInstance chose = myRoundLoadBalancer.rotationChose("feign-server");
+        ServiceInstance chose = myRoundLoadBalancer.rotationChose(command.httpRequest.getServiceName());
         command.serviceInstance = chose;
-        AsynHttpClient.get(chose.getUri().toString()+"/hi",command);
+        if(feign.Request.HttpMethod.GET.equals(command.httpRequest.getRequestMethod())) {
+            AsynHttpClient.get(chose.getUri().toString() + "/" + command.httpRequest.getRequestUrl(), command);
+        }else if(feign.Request.HttpMethod.POST.equals(command.httpRequest.getRequestMethod())){
+
+        }
         return asynRpcInovker;
     }
 
@@ -117,8 +124,8 @@ public class HttpAsyncClient {
                     try {
                         // http 访问成功，回调
                         System.out.println(EntityUtils.toString(response2.getEntity()));
-                        command.context.getHttpRequest().setHttpResult("success");
-                        command.commandDoneListener.onHttpCommandDone(command.context);
+                        command.httpRequest.setHttpResult("success");
+                        command.commandDoneListener.onHttpCommandDone(command.context,EntityUtils.toString(response2.getEntity()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -127,16 +134,16 @@ public class HttpAsyncClient {
                 public void failed(final Exception ex) {
                     // http 访问失败，回调
                     System.out.println("failed:"+request2.getRequestLine() + "->" + ex);
-                    command.context.getHttpRequest().setHttpResult("failed");
+                    command.httpRequest.setHttpResult("failed");
                     SpringContext.getBean(MyRoundLoadBalancer.class).notifeFailedNode(command.serviceInstance);
-                    command.commandDoneListener.onHttpCommandDone(command.context);
+                    command.commandDoneListener.onHttpCommandDone(command.context,ex.getLocalizedMessage());
 
                 }
 
                 public void cancelled() {
                     System.out.println("cancelled:"+request2.getRequestLine() + " cancelled");
-                    command.context.getHttpRequest().setHttpResult("cancelled");
-                    command.commandDoneListener.onHttpCommandDone(command.context);
+                    command.httpRequest.setHttpResult("cancelled");
+                    command.commandDoneListener.onHttpCommandDone(command.context,"cancelled");
                 }
 
             });

@@ -6,5 +6,5 @@ import monoServer.common.ActContext;
 
 public interface HttpCommandDoneListener {
 
-    public void onHttpCommandDone(ActContext context);
+    public void onHttpCommandDone(ActContext context,String httpResult);
 }
