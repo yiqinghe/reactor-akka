@@ -1,10 +1,10 @@
 package monoServer.actorImpl;
 
-import monoServer.actors.AbstractFirstActor;
+import monoServer.actors.AbstractCommonActor;
 import monoServer.actors.BaseActor;
 import monoServer.common.ActContext;
 
-public class SayHelloFristActor extends AbstractFirstActor {
+public class SayHelloFristActor extends AbstractCommonActor {
 
     @Override
     public  Object buildExecuteData(ActContext context){
