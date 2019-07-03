@@ -121,13 +121,17 @@ public class ActorTopoBuilder {
             actorList.add(actorRef);
         }
         totalActors.put(ResponseActor.class,actorList);
-        if( GlobalActorHolder.holders.get(actorGroupIdEnum) == null){
+        if(GlobalActorHolder.holders.get(actorGroupIdEnum) == null){
             synchronized (actorGroupIdEnum){
                 if(GlobalActorHolder.holders.get(actorGroupIdEnum) == null) {
                     actorTopo = new ActorTopo(frist, actorGroupIdEnum, totalActors, parallNum, roundCounters);
                     GlobalActorHolder.holders.put(actorGroupIdEnum,actorTopo);
+                }else{
+                   return GlobalActorHolder.holders.get(actorGroupIdEnum);
                 }
             }
+        }else{
+            return GlobalActorHolder.holders.get(actorGroupIdEnum);
         }
         return actorTopo;
     }
