@@ -14,9 +14,9 @@ import monoServer.common.GlobalActorHolder;
 import reactor.core.publisher.MonoSink;
 
 /**
- * 第一个执行单元，一般处理入口业务逻辑，以及决定下一个执行器
+ * 通用执行单元，一般处理入口业务、或者整合逻辑，以及决定下一个执行器
  */
-public abstract class AbstractFirstActor extends AbstractAsynActor {
+public abstract class AbstractCommonActor extends BaseActor {
 
     @Override
     public Receive createReceive() {
@@ -28,15 +28,6 @@ public abstract class AbstractFirstActor extends AbstractAsynActor {
                     dispatch(actorRefClass,context);
                 })
                 .build();
-    }
-
-    @Override
-    public void onSuccess(ActContext context, Object result) {
-    }
-
-    @Override
-    public void onFail(ActContext context, Throwable exception) {
-
     }
 
 }
