@@ -58,7 +58,7 @@ public class Controller {
             return  ActorTopoBuilder.newBuilder(ActorGroupIdEnum.SAY_HELLO)
                     .frist(SayHelloFristActor.class)
                     .topo(HttpActor.class)
-                    .build()
+                    .build(20)
                     .start(requestData);
 //        //myRoundLoadBalancer.chose("feign-server");
 //        Mono<String> monoResult = Mono.create(deferredResult->{

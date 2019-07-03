@@ -22,6 +22,8 @@ public class ActorTopoBuilder {
 
     private ActorTopo actorTopo;
 
+    private int DefaultInstanceCount = 20;
+
     public static ActorTopoBuilder newBuilder(ActorGroupIdEnum actorGroupIdEnum){
         return new ActorTopoBuilder(actorGroupIdEnum);
     }
@@ -49,7 +51,7 @@ public class ActorTopoBuilder {
         return this;
     }
 
-    public ActorTopo build() throws InstantiationException, IllegalAccessException {
+    public ActorTopo build(int parallNum) throws InstantiationException, IllegalAccessException {
         if(this.actorTopo != null){
             return actorTopo;
         }
@@ -59,12 +61,15 @@ public class ActorTopoBuilder {
         if(actorGroupIdEnum == null){
             throw new RuntimeException("you must assign the idEnum");
         }
+        if(parallNum < 1){
+            parallNum = DefaultInstanceCount;
+        }
         totalActors = new HashMap<>();
         List<ActorRef> actorList = null;
         //每个actorref实例化20个
         for (Class<? extends BaseActor> actorClass: actorClasses) {
             actorList = new ArrayList<>();
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < parallNum; i++) {
                 ActorRef actorRef = GlobalActorHolder.system.actorOf(BaseActor.props(actorClass)
                         ,  actorGroupIdEnum.getServiceId()+"_"+actorClass.getSimpleName()+"_"+i);
                  actorList.add(actorRef);
@@ -74,7 +79,7 @@ public class ActorTopoBuilder {
         }
         //把frist也要添加进去
         actorList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < parallNum; i++) {
             ActorRef actorRef = GlobalActorHolder.system.actorOf(BaseActor.props(frist)
                     , actorGroupIdEnum.getServiceId()+"_"+frist.getSimpleName()+"_"+i);
             actorList.add(actorRef);
@@ -82,14 +87,19 @@ public class ActorTopoBuilder {
         totalActors.put(frist,actorList);
         //把response也要添加进去
         actorList = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < parallNum; i++) {
             ActorRef actorRef = GlobalActorHolder.system.actorOf(BaseActor.props(ResponseActor.class)
                     , actorGroupIdEnum.getServiceId()+"_"+ResponseActor.class.getSimpleName()+"_"+i);
             actorList.add(actorRef);
         }
         totalActors.put(ResponseActor.class,actorList);
-
-        actorTopo = new ActorTopo(frist,actorGroupIdEnum,totalActors);
+        synchronized (this){
+            if(actorTopo == null){
+                synchronized (this){
+                    actorTopo = new ActorTopo(frist,actorGroupIdEnum,totalActors,parallNum);
+                }
+            }
+        }
         GlobalActorHolder.holders.put(actorGroupIdEnum,actorTopo);
         return actorTopo;
     }

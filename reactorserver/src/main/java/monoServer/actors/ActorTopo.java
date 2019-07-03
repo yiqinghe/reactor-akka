@@ -21,6 +21,12 @@ public class ActorTopo {
 
     private AtomicInteger nextServerCyclicCounter;
 
+    private int instanceCount = 20;
+
+    public int getInstanceCount() {
+        return instanceCount;
+    }
+
     public Map<Class<? extends BaseActor>, List<ActorRef>> getTotalActors() {
         return totalActors;
     }
@@ -28,11 +34,12 @@ public class ActorTopo {
 
 
     public ActorTopo(Class<? extends BaseActor> frist, ActorGroupIdEnum actorGroupIdEnum
-            , Map<Class<? extends BaseActor>,List<ActorRef>> totalActors) {
+            , Map<Class<? extends BaseActor>,List<ActorRef>> totalActors,int instanceCount) {
         this.frist = frist;
         this.totalActors = totalActors;
         this.actorGroupIdEnum = actorGroupIdEnum;
         this.nextServerCyclicCounter = new AtomicInteger(0);
+        this.instanceCount = instanceCount;
     }
 
     public Mono<String> start(Map<String, Object> params){
