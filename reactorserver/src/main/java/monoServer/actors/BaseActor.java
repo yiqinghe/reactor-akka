@@ -16,7 +16,7 @@ public abstract class BaseActor extends AbstractActor{
     }
 
     //#greeter-messages
-    public static Props props(Class<? extends BaseActor> actorClass) throws IllegalAccessException, InstantiationException {
+    public static Props props(Class<? extends BaseActor> actorClass) {
         return Props.create(actorClass);
     }
 

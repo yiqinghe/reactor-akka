@@ -28,6 +28,8 @@ public class HttpActor extends AbstractHttpActor {
     }
 
 
-
-
+    @Override
+    public Class<? extends BaseActor> errorAndNext(ActContext context, Throwable exception) {
+        return null;
+    }
 }

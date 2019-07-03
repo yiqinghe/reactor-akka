@@ -27,4 +27,8 @@ public class LettcueRedisActor extends AbstractLettcueRedisActor {
         }
     }
 
+    @Override
+    public Class<? extends BaseActor> errorAndNext(ActContext context, Throwable exception) {
+        return null;
+    }
 }
