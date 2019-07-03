@@ -8,7 +8,7 @@ import monoServer.common.ActContext;
 
 public class SyncDBActor extends AbstractDBActor {
 
-    @AkkaMaper("userDao")
+    @AkkaMaper
     private UserDao userDao;
 
     @Override

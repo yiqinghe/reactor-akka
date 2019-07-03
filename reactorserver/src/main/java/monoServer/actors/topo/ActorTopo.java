@@ -52,8 +52,7 @@ public class ActorTopo {
         if(GlobalActorHolder.holders.get(actorGroupIdEnum) == null){
             synchronized (actorGroupIdEnum){
                 if(GlobalActorHolder.holders.get(actorGroupIdEnum) == null){
-                    GlobalActorHolder.holders.putIfAbsent(actorGroupIdEnum,new ActorTopo(actorGroupIdEnum));
-                    return GlobalActorHolder.holders.get(actorGroupIdEnum);
+                    return new ActorTopo(actorGroupIdEnum);
                 }else{
                     return GlobalActorHolder.holders.get(actorGroupIdEnum);
                 }
@@ -62,12 +61,15 @@ public class ActorTopo {
             return GlobalActorHolder.holders.get(actorGroupIdEnum);
         }
     }
-
+    private boolean inited = false;
     private ActorTopo(ActorGroupIdEnum actorGroupIdEnum){
         this.actorGroupIdEnum = actorGroupIdEnum;
     }
 
     public ActorTopo topo(Class<? extends BaseActor>... actorClasses) throws IllegalAccessException, InstantiationException {
+        if(inited){
+            return this;
+        }
         if(actorClasses != null) {
             this.actorClasses = new HashSet<>(Arrays.asList(actorClasses));
         }
@@ -75,11 +77,17 @@ public class ActorTopo {
     }
 
     public ActorTopo frist(Class<? extends BaseActor> actor){
+        if(inited){
+            return this;
+        }
         this.frist = actor;
         return this;
     }
 
     public ActorTopo build(int parallNum) throws InstantiationException, IllegalAccessException {
+        if(inited){
+            return this;
+        }
         if(frist == null){
             throw  new RuntimeException("you must assign the frist actor");
         }
@@ -141,6 +149,7 @@ public class ActorTopo {
         totalActors.put(ResponseActor.class,actorList);
 
         GlobalActorHolder.holders.putIfAbsent(actorGroupIdEnum, this);
+        inited=true;
         return this;
     }
 
