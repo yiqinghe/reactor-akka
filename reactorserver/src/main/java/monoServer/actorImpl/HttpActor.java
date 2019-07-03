@@ -13,6 +13,7 @@ public class HttpActor extends AbstractHttpActor {
     @Override
     public HttpRequest buildExecuteData(ActContext context) {
         //组装http请求信息，具体请求由框架执行
+
         return new HttpRequest();
     }
 

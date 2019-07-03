@@ -1,7 +1,9 @@
 package monoServer.enums;
 
 public enum RedisCommandEnum {
-    GET("get");
+    GET("get"),SET("set"),
+    MGET("mget"),MSET("mset"),
+    HGET("hget"),HSET("hset");
 
     private String command;
 

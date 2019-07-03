@@ -19,7 +19,7 @@ public class SyncDBActor extends AbstractDBActor {
     @Override
     public Class<? extends BaseActor> executeAndNext(ActContext context, Object data) {
         String s = userDao.get();
-        System.out.println(s);
+        //System.out.println(s);
         context.getResponseData().put("db result",s);
         return null;
     }

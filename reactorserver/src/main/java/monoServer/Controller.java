@@ -2,7 +2,7 @@ package monoServer;
 
 import monoServer.actorImpl.SayHelloFristActor;
 import monoServer.actorImpl.SyncDBActor;
-import monoServer.actors.topo.ActorTopoBuilder;
+import monoServer.actors.topo.ActorTopo;
 import monoServer.enums.ActorGroupIdEnum;
 import monoServer.redission.RedissionClient;
 import org.redisson.api.RBucket;
@@ -55,7 +55,7 @@ public class Controller {
         Map<String,Object> requestData = new HashMap<>();
         requestData.put("userId","16999999");
         Mono<String> kk = Mono.just("hello");
-            return  ActorTopoBuilder.newBuilder(ActorGroupIdEnum.SAY_HELLO)
+            return  ActorTopo.newBuilder(ActorGroupIdEnum.SAY_HELLO)
                     .frist(SayHelloFristActor.class)
                     .topo(SyncDBActor.class)
                     .build(20)

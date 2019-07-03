@@ -11,10 +11,10 @@ import monoServer.listener.AsynCommandListener;
 public abstract class AbstractAsynActor extends BaseActor implements AsynCommandListener {
     /**
      * 异步请求才有的error回调
-     * 如果不需要执行，直接返回null，系统自动将context.responseData返回。
+     * 如果不需要执行，直接返回null，系统自动将context.exception返回。
      * 如果context.responseData为空,组装默认返回数据
      * @param context
-     * @param data
+     * @param exception
      * @return
      */
     public abstract Class<? extends BaseActor> errorAndNext(ActContext context,Throwable exception);
