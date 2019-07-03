@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GlobalActorHolder {
 
-    public static ConcurrentHashMap<ActorGroupIdEnum,ActorTopo> holders = new ConcurrentHashMap<>();
+    public static volatile ConcurrentHashMap<ActorGroupIdEnum,ActorTopo> holders = new ConcurrentHashMap<>();
 
     public static final ActorSystem system = ActorSystem.create("root");
 
