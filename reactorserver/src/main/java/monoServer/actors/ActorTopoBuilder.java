@@ -49,9 +49,8 @@ public class ActorTopoBuilder {
         return this;
     }
 
-    public ActorTopo build(Map<String,Object> params) throws InstantiationException, IllegalAccessException {
+    public ActorTopo build() throws InstantiationException, IllegalAccessException {
         if(this.actorTopo != null){
-            actorTopo.setParams(params);
             return actorTopo;
         }
         if(frist == null){
@@ -90,21 +89,13 @@ public class ActorTopoBuilder {
         }
         totalActors.put(ResponseActor.class,actorList);
 
-        actorTopo = new ActorTopo(frist,params,actorGroupIdEnum,totalActors);
+        actorTopo = new ActorTopo(frist,actorGroupIdEnum,totalActors);
         GlobalActorHolder.holders.put(actorGroupIdEnum,actorTopo);
         return actorTopo;
     }
 
 
-    public ActorTopoBuilder setServiceId(ActorGroupIdEnum actorGroupIdEnum){
-        this.actorGroupIdEnum = actorGroupIdEnum;
-        this.actorTopo=GlobalActorHolder.holders.get(actorGroupIdEnum);
-        return this;
-    }
 
-    public static ActorTopo getActorTopoById(ActorGroupIdEnum actorGroupIdEnum){
-        return  GlobalActorHolder.holders.get(actorGroupIdEnum);
-    }
 
 
 

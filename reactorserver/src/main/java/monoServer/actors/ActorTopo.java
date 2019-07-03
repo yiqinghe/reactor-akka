@@ -14,7 +14,6 @@ public class ActorTopo {
     private Class<? extends BaseActor> frist;
 
 
-    private Map<String,Object> params;
 
     private Map<Class<? extends BaseActor>,List<ActorRef>> totalActors;
 
@@ -26,24 +25,17 @@ public class ActorTopo {
         return totalActors;
     }
 
-    public Map<String, Object> getParams() {
-        return params;
-    }
 
-    public void setParams(Map<String, Object> params) {
-        this.params = params;
-    }
 
-    public ActorTopo(Class<? extends BaseActor> frist, Map<String, Object> params
-            , ActorGroupIdEnum actorGroupIdEnum, Map<Class<? extends BaseActor>,List<ActorRef>> totalActors) {
+    public ActorTopo(Class<? extends BaseActor> frist, ActorGroupIdEnum actorGroupIdEnum
+            , Map<Class<? extends BaseActor>,List<ActorRef>> totalActors) {
         this.frist = frist;
-        this.params = params;
         this.totalActors = totalActors;
         this.actorGroupIdEnum = actorGroupIdEnum;
         this.nextServerCyclicCounter = new AtomicInteger(0);
     }
 
-    public Mono<String> start(){
+    public Mono<String> start(Map<String, Object> params){
 
         Mono<String> monoResult = Mono.create(deferredResult->{
 
