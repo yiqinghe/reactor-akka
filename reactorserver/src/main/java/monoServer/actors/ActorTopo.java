@@ -40,7 +40,7 @@ public class ActorTopo {
         Mono<String> monoResult = Mono.create(deferredResult->{
 
             ActContext context = new ActContext();
-            context.setBusinessData(params);
+            context.setRequestData(params);
             context.setMonoSink(deferredResult);
             context.setActorGroupIdEnum(actorGroupIdEnum);
             totalActors.get(frist).get(incrementAndGetModulo(20)).tell(context,ActorRef.noSender());

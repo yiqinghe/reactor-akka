@@ -9,7 +9,7 @@ import java.util.List;
 public class LettcueRedisActor extends AbstractLettcueRedisActor {
 
     @Override
-    public Object buildExecuteData(ActContext context) {
+    public RedisCommand buildExecuteData(ActContext context) {
        return null;
     }
 
@@ -22,13 +22,9 @@ public class LettcueRedisActor extends AbstractLettcueRedisActor {
             return SyncDBActor.class;
         }else{
             //有数据走下一步
-            context.getBusinessData().put("result",result);
+             context.getContextData().put("LettcueRedisActorResult",result);
             return IntegrateDataActor.class;
         }
     }
 
-    @Override
-    public Class<? extends BaseActor> onErrorListener(Object error,ActContext context) {
-        return SyncDBActor.class;
-    }
 }

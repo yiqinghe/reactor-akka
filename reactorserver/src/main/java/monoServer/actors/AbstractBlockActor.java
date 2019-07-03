@@ -8,6 +8,9 @@ import monoServer.common.ActContext;
 
 import java.lang.reflect.Field;
 
+/**
+ * 同步执行actor
+ */
 public abstract class AbstractBlockActor extends BaseActor{
 
 }

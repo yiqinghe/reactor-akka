@@ -1,12 +1,10 @@
 package monoServer.http;
 
 import monoServer.MyRoundLoadBalancer;
-import monoServer.Request;
 import monoServer.SpringContext;
 import monoServer.common.ActContext;
 import monoServer.common.Contance;
-import monoServer.listener.HttpCommandDoneListener;
-import org.apache.http.HttpRequest;
+import monoServer.listener.AsynCommandListener;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
@@ -32,13 +30,13 @@ public class HttpAsyncClient {
 
 
 
-        final public HttpCommandDoneListener commandDoneListener;
+        final public AsynCommandListener asynCommandListener;
 
-        public Command(ActContext context, long startTime, HttpCommandDoneListener commandDoneListener
+        public Command(ActContext context, long startTime, AsynCommandListener asynCommandListener
         ,monoServer.request.HttpRequest httpRequest) {
             this.context = context;
             this.startTime = startTime;
-            this.commandDoneListener = commandDoneListener;
+            this.asynCommandListener = asynCommandListener;
             this.httpRequest = httpRequest;
         }
 
@@ -125,7 +123,7 @@ public class HttpAsyncClient {
                         // http 访问成功，回调
                         System.out.println(EntityUtils.toString(response2.getEntity()));
                         command.httpRequest.setHttpResult("success");
-                        command.commandDoneListener.onHttpCommandDone(command.context,EntityUtils.toString(response2.getEntity()));
+                        command.asynCommandListener.onSuccess(command.context,EntityUtils.toString(response2.getEntity()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -136,14 +134,14 @@ public class HttpAsyncClient {
                     System.out.println("failed:"+request2.getRequestLine() + "->" + ex);
                     command.httpRequest.setHttpResult("failed");
                     SpringContext.getBean(MyRoundLoadBalancer.class).notifeFailedNode(command.serviceInstance);
-                    command.commandDoneListener.onHttpCommandDone(command.context,ex.getLocalizedMessage());
+                    command.asynCommandListener.onFail(command.context,ex);
 
                 }
 
                 public void cancelled() {
                     System.out.println("cancelled:"+request2.getRequestLine() + " cancelled");
                     command.httpRequest.setHttpResult("cancelled");
-                    command.commandDoneListener.onHttpCommandDone(command.context,"cancelled");
+                    command.asynCommandListener.onSuccess(command.context,"cancelled");
                 }
 
             });

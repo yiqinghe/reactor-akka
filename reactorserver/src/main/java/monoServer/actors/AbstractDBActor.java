@@ -37,12 +37,10 @@ public abstract class AbstractDBActor extends AbstractBlockActor{
 
         return receiveBuilder()
                 .match(ActContext.class, context -> {
-                    Class<? extends BaseActor> actorRefClass = this.execute(context);
+                    Object dbObject = this.buildExecuteData(context);
+                    Class<? extends BaseActor> actorRefClass = this.executeAndNext(context,dbObject);
                     dispatch(actorRefClass,context);
                 })
                 .build();
     }
-
-    public abstract Class<? extends BaseActor> execute(ActContext context);
-
 }

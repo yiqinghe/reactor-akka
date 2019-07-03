@@ -13,22 +13,30 @@ import monoServer.common.ActContext;
 import monoServer.common.GlobalActorHolder;
 import reactor.core.publisher.MonoSink;
 
-public abstract class AbstractCommonActor extends BaseActor {
-
-    @Override
-    public  Object buildExecuteData(ActContext context){
-        return null;
-    }
+/**
+ * 第一个执行单元，一般处理入口业务逻辑，以及决定下一个执行器
+ */
+public abstract class AbstractFirstActor extends AbstractAsynActor {
 
     @Override
     public Receive createReceive() {
 
         return receiveBuilder()
                 .match(ActContext.class, context -> {
-                    Class<? extends BaseActor> actorRefClass = this.executeAndNext(context,null);
+                    Object firstObject = this.buildExecuteData(context);
+                    Class<? extends BaseActor> actorRefClass = this.executeAndNext(context,firstObject);
                     dispatch(actorRefClass,context);
                 })
                 .build();
+    }
+
+    @Override
+    public void onSuccess(ActContext context, Object result) {
+    }
+
+    @Override
+    public void onFail(ActContext context, Throwable exception) {
+
     }
 
 }

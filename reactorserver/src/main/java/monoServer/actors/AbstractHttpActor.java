@@ -1,18 +1,11 @@
 package monoServer.actors;
 
-import akka.actor.AbstractActor;
-import akka.actor.ActorRef;
-import akka.actor.Props;
-import monoServer.AsynRpcInovker;
-import monoServer.Request;
 import monoServer.common.ActContext;
-import monoServer.http.HttpAsynInovker;
 import monoServer.http.HttpAsyncClient;
-import monoServer.listener.HttpCommandDoneListener;
+import monoServer.listener.AsynCommandListener;
 import monoServer.request.HttpRequest;
-import reactor.core.publisher.MonoSink;
 
-public abstract class AbstractAsyncHttpActor extends BaseActor implements HttpCommandDoneListener{
+public abstract class AbstractHttpActor extends AbstractAsynActor {
 
 
     @Override
@@ -20,7 +13,7 @@ public abstract class AbstractAsyncHttpActor extends BaseActor implements HttpCo
 
         return receiveBuilder()
                 .match(ActContext.class, context -> {
-                    HttpRequest request = (HttpRequest) this.buildExecuteData(context);
+                    HttpRequest request = this.buildExecuteData(context);
                     //多次http调用 只会纪录上一次的信息
                     HttpAsyncClient.Command clientCommand = new HttpAsyncClient.Command(context
                             ,System.currentTimeMillis(),this,request);
@@ -29,10 +22,21 @@ public abstract class AbstractAsyncHttpActor extends BaseActor implements HttpCo
                 .build();
     }
 
+    /**
+     * 需要实现要发起请求的url，body信息等
+     * @param context
+     * @return
+     */
+    public abstract HttpRequest buildExecuteData(ActContext context);
 
     @Override
-    public void onHttpCommandDone(ActContext context,String httpresult) {
+    public void onSuccess(ActContext context, Object httpresult) {
         Class<? extends BaseActor> actorRefClass = executeAndNext(context,httpresult);
         dispatch(actorRefClass,context);
+    }
+
+    @Override
+    public void onFail(ActContext context, Throwable exception) {
+
     }
 }

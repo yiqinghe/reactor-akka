@@ -1,8 +1,6 @@
 package monoServer.common;
 
-import com.google.common.cache.Cache;
 import monoServer.enums.ActorGroupIdEnum;
-import monoServer.request.HttpRequest;
 import reactor.core.publisher.MonoSink;
 
 import java.util.HashMap;
@@ -10,7 +8,12 @@ import java.util.Map;
 
 public class ActContext {
 
-    private Map<String,Object> businessData = new HashMap<>();
+    // 请求数据
+    private Map<String,Object> requestData = new HashMap<>();
+    // 结果数据
+    private Map<String,Object> responseData = new HashMap<>();
+    // 中间上下文数据
+    private Map<String,Object> contextData = new HashMap<>();
 
     private String traceId;
 
@@ -26,12 +29,12 @@ public class ActContext {
         this.actorGroupIdEnum = actorGroupIdEnum;
     }
 
-    public Map<String, Object> getBusinessData() {
-        return businessData;
+    public Map<String, Object> getResponseData() {
+        return responseData;
     }
 
-    public void setBusinessData(Map<String, Object> businessData) {
-        this.businessData = businessData;
+    public void setResponseData(Map<String, Object> responseData) {
+        this.responseData = responseData;
     }
 
     public String getTraceId() {
@@ -48,5 +51,21 @@ public class ActContext {
 
     public void setMonoSink(MonoSink<String> monoSink) {
         this.monoSink = monoSink;
+    }
+
+    public Map<String, Object> getRequestData() {
+        return requestData;
+    }
+
+    public void setRequestData(Map<String, Object> requestData) {
+        this.requestData = requestData;
+    }
+
+    public Map<String, Object> getContextData() {
+        return contextData;
+    }
+
+    public void setContextData(Map<String, Object> contextData) {
+        this.contextData = contextData;
     }
 }
