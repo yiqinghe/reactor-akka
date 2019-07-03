@@ -2,8 +2,7 @@ package monoServer.common;
 
 
 import akka.actor.ActorSystem;
-import monoServer.actors.ActorTopo;
-import monoServer.actors.ActorTopoBuilder;
+import monoServer.actors.topo.ActorTopo;
 import monoServer.enums.ActorGroupIdEnum;
 
 import java.util.concurrent.ConcurrentHashMap;

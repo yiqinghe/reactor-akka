@@ -1,7 +1,7 @@
 package monoServer.actorImpl;
 
 import annotation.AkkaMaper;
-import dao.UserDao;
+import monoServer.dao.UserDao;
 import monoServer.actors.AbstractDBActor;
 import monoServer.actors.BaseActor;
 import monoServer.common.ActContext;
@@ -18,6 +18,9 @@ public class SyncDBActor extends AbstractDBActor {
 
     @Override
     public Class<? extends BaseActor> executeAndNext(ActContext context, Object data) {
+        String s = userDao.get();
+        System.out.println(s);
+        context.getResponseData().put("db result",s);
         return null;
     }
 }

@@ -1,8 +1,8 @@
 package monoServer;
 
-import monoServer.actorImpl.HttpActor;
 import monoServer.actorImpl.SayHelloFristActor;
-import monoServer.actors.ActorTopoBuilder;
+import monoServer.actorImpl.SyncDBActor;
+import monoServer.actors.topo.ActorTopoBuilder;
 import monoServer.enums.ActorGroupIdEnum;
 import monoServer.redission.RedissionClient;
 import org.redisson.api.RBucket;
@@ -51,13 +51,13 @@ public class Controller {
     @RequestMapping(value = "/sayHello")
     public Mono<String> sayHello() throws InstantiationException, IllegalAccessException {
       // System.out.println("Request received");
-
+        //Object userDao111 = SpringContext.getBean("userDao111");
         Map<String,Object> requestData = new HashMap<>();
         requestData.put("userId","16999999");
         Mono<String> kk = Mono.just("hello");
             return  ActorTopoBuilder.newBuilder(ActorGroupIdEnum.SAY_HELLO)
                     .frist(SayHelloFristActor.class)
-                    .topo(HttpActor.class)
+                    .topo(SyncDBActor.class)
                     .build(20)
                     .start(requestData);
 //        //myRoundLoadBalancer.chose("feign-server");

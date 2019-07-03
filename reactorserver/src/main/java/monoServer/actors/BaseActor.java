@@ -3,10 +3,9 @@ package monoServer.actors;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import akka.japi.Creator;
+import monoServer.actors.topo.ActorTopo;
 import monoServer.common.ActContext;
 import monoServer.common.GlobalActorHolder;
-import monoServer.request.HttpRequest;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,18 +24,20 @@ public abstract class BaseActor extends AbstractActor{
         if(actorRefClass == null){
             actorRefClass = ResponseActor.class;
         }
-        List<ActorRef> actorRefs = GlobalActorHolder.holders
-                .get(context.getActorGroupIdEnum()).getTotalActors().get(actorRefClass);
-        ActorRef nextRef = actorRefs.get(incrementAndGetModulo(20));
+
+        ActorTopo actorTopo = GlobalActorHolder.holders.get(context.getActorGroupIdEnum());
+        List<ActorRef> actorRefs = actorTopo.getTotalActors().get(actorRefClass);
+        ActorRef nextRef = actorRefs.get(incrementAndGetModulo(actorTopo.getInstanceCount(),actorTopo.getRoundCounters().get(this.getClass())));
         nextRef.tell(context,getSelf());
     }
-    private  AtomicInteger nextServerCyclicCounter = new AtomicInteger(0);
 
-    protected int incrementAndGetModulo(int modulo) {
+    protected int incrementAndGetModulo(int modulo,AtomicInteger nextServerCyclicCounter) {
+
         for (;;) {
             int current = nextServerCyclicCounter.get();
             int next = (current + 1) % modulo;
             if (nextServerCyclicCounter.compareAndSet(current, next))
+                System.out.println(this.getClass().getSimpleName()+"---"+next);
                 return next;
         }
     }

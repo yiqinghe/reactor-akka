@@ -3,27 +3,32 @@ package monoServer.actors;
 import akka.actor.Props;
 import akka.japi.Creator;
 import annotation.AkkaMaper;
-import com.netflix.ribbon.proxy.annotation.Http;
-import dao.UserDao;
+import annotation.DBActor;
+import monoServer.dao.UserDaoImpl;
 import monoServer.SpringContext;
-import monoServer.actors.BaseActor;
 import monoServer.command.HttpCommand;
 import monoServer.common.ActContext;
 
 import java.lang.reflect.Field;
 
+@DBActor
 public abstract class AbstractDBActor extends AbstractBlockActor{
 
-    //#greeter-messages
-    public static Props props(Class<? extends BaseActor> actorClass) throws IllegalAccessException, InstantiationException {
-        return Props.create(actorClass, new Creator<AbstractDBActor>() {
+    public AbstractDBActor(){
+
+    }
+
+    public static Props props(Class<? extends BaseActor> actorClass)  {
+        return Props.create(actorClass, new Creator() {
             @Override
-            public AbstractDBActor create() throws Exception {
+            public Object create() throws Exception {
                 AbstractDBActor abstractDBActor = (AbstractDBActor) actorClass.newInstance();
                 Field[] declaredFields = actorClass.getDeclaredFields();
                 for (Field field:declaredFields) {
                     if(field.getAnnotation(AkkaMaper.class) != null){
-
+                        field.setAccessible(true);
+                        field.set(abstractDBActor,SpringContext.getBean(field.getType()
+                        ));
                     }
                 }
                 return abstractDBActor;
@@ -43,4 +48,5 @@ public abstract class AbstractDBActor extends AbstractBlockActor{
                 })
                 .build();
     }
+
 }

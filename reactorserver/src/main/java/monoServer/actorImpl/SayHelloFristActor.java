@@ -1,5 +1,6 @@
 package monoServer.actorImpl;
 
+import annotation.DBActor;
 import monoServer.actors.AbstractCommonActor;
 import monoServer.actors.BaseActor;
 import monoServer.common.ActContext;
@@ -21,6 +22,6 @@ public class SayHelloFristActor extends AbstractCommonActor {
     @Override
     public Class<? extends BaseActor> executeAndNext(ActContext context,Object data) {
         // todo do some business
-        return HttpActor.class;
+        return SyncDBActor.class;
     }
 }

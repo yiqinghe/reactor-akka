@@ -1,6 +1,7 @@
-package monoServer.actors;
+package monoServer.actors.topo;
 
 import akka.actor.ActorRef;
+import monoServer.actors.BaseActor;
 import monoServer.common.ActContext;
 import monoServer.enums.ActorGroupIdEnum;
 import reactor.core.publisher.Mono;
@@ -23,6 +24,12 @@ public class ActorTopo {
 
     private int instanceCount = 20;
 
+    private Map<Class<? extends BaseActor>,AtomicInteger> roundCounters;
+
+    public Map<Class<? extends BaseActor>, AtomicInteger> getRoundCounters() {
+        return roundCounters;
+    }
+
     public int getInstanceCount() {
         return instanceCount;
     }
@@ -34,12 +41,14 @@ public class ActorTopo {
 
 
     public ActorTopo(Class<? extends BaseActor> frist, ActorGroupIdEnum actorGroupIdEnum
-            , Map<Class<? extends BaseActor>,List<ActorRef>> totalActors,int instanceCount) {
+            , Map<Class<? extends BaseActor>,List<ActorRef>> totalActors,int instanceCount
+            ,Map<Class<? extends BaseActor>,AtomicInteger> roundCounters) {
         this.frist = frist;
         this.totalActors = totalActors;
         this.actorGroupIdEnum = actorGroupIdEnum;
         this.nextServerCyclicCounter = new AtomicInteger(0);
         this.instanceCount = instanceCount;
+        this.roundCounters = roundCounters;
     }
 
     public Mono<String> start(Map<String, Object> params){

@@ -1,13 +1,18 @@
-package monoServer.actors;
+package monoServer.actors.topo;
 
 import akka.actor.ActorRef;
 
-import javafx.util.Builder;
-import jodd.util.CollectionUtil;
+import annotation.BlockActor;
+import annotation.DBActor;
+import monoServer.actorImpl.SyncDBActor;
+import monoServer.actors.AbstractDBActor;
+import monoServer.actors.BaseActor;
+import monoServer.actors.ResponseActor;
 import monoServer.common.GlobalActorHolder;
 import monoServer.enums.ActorGroupIdEnum;
+
 import java.util.*;
-import monoServer.actors.ActorTopo;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class ActorTopoBuilder {
@@ -30,6 +35,7 @@ public class ActorTopoBuilder {
 
     private ActorTopoBuilder(ActorGroupIdEnum actorGroupIdEnum){
         this.actorGroupIdEnum = actorGroupIdEnum;
+        this.actorTopo = GlobalActorHolder.holders.get(actorGroupIdEnum);
     }
 
     public ActorTopoBuilder topo(Class<? extends BaseActor>... actorClasses) throws IllegalAccessException, InstantiationException {
@@ -66,16 +72,37 @@ public class ActorTopoBuilder {
         }
         totalActors = new HashMap<>();
         List<ActorRef> actorList = null;
+        Map<Class<? extends BaseActor>,AtomicInteger> roundCounters = new HashMap<>();
         //每个actorref实例化20个
         for (Class<? extends BaseActor> actorClass: actorClasses) {
             actorList = new ArrayList<>();
+            boolean isBlock = false;
+            boolean isDB = false;
+            if(actorClass.getAnnotation(BlockActor.class) != null){
+                isBlock = true;
+            }
+            if(actorClass.getAnnotation(DBActor.class) != null){
+                isDB = true;
+            }
             for (int i = 0; i < parallNum; i++) {
-                ActorRef actorRef = GlobalActorHolder.system.actorOf(BaseActor.props(actorClass)
-                        ,  actorGroupIdEnum.getServiceId()+"_"+actorClass.getSimpleName()+"_"+i);
-                 actorList.add(actorRef);
+                ActorRef actorRef = null;
+                if(isBlock) {
+                    if(isDB){
+                        actorRef = GlobalActorHolder.system.actorOf(AbstractDBActor.props(actorClass).withDispatcher("blocking-io-dispatcher")
+                                , actorGroupIdEnum.getServiceId() + "_" + actorClass.getSimpleName() + "_" + i);
+                    }else{
+                        actorRef = GlobalActorHolder.system.actorOf(BaseActor.props(actorClass).withDispatcher("blocking-io-dispatcher")
+                                , actorGroupIdEnum.getServiceId() + "_" + actorClass.getSimpleName() + "_" + i);
+                    }
+                }else{
+                     actorRef = GlobalActorHolder.system.actorOf(BaseActor.props(actorClass)
+                            , actorGroupIdEnum.getServiceId() + "_" + actorClass.getSimpleName() + "_" + i);
+                }
+                actorList.add(actorRef);
             }
             //RepointableActorRef
             totalActors.put(actorClass,actorList);
+            roundCounters.put(actorClass,new AtomicInteger(0));
         }
         //把frist也要添加进去
         actorList = new ArrayList<>();
@@ -85,6 +112,7 @@ public class ActorTopoBuilder {
             actorList.add(actorRef);
         }
         totalActors.put(frist,actorList);
+        roundCounters.put(frist,new AtomicInteger(0));
         //把response也要添加进去
         actorList = new ArrayList<>();
         for (int i = 0; i < parallNum; i++) {
@@ -96,17 +124,13 @@ public class ActorTopoBuilder {
         synchronized (this){
             if(actorTopo == null){
                 synchronized (this){
-                    actorTopo = new ActorTopo(frist,actorGroupIdEnum,totalActors,parallNum);
+                    actorTopo = new ActorTopo(frist,actorGroupIdEnum,totalActors,parallNum,roundCounters);
                 }
             }
         }
         GlobalActorHolder.holders.put(actorGroupIdEnum,actorTopo);
         return actorTopo;
     }
-
-
-
-
 
 
 
