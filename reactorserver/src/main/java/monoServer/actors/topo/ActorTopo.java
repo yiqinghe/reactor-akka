@@ -31,7 +31,7 @@ public class ActorTopo {
 
     Map<Class<? extends BaseActor>,AtomicInteger> roundCounters = new HashMap<>();
 
-    private int instanceCount = 20;
+    private int instanceCount = 0;
 
     private AtomicInteger nextServerCyclicCounter = new AtomicInteger(0);
 
@@ -82,8 +82,14 @@ public class ActorTopo {
         }
         return this;
     }
+    public ActorTopo parall(int num){
+        if(instanceCount == 0) {
+            instanceCount = num;
+        }
+        return this;
+    }
 
-    public ActorTopo build(int parallNum) {
+    public ActorTopo build() {
         if(initStatus.get() == INITED){
             return this;
         }
@@ -93,14 +99,14 @@ public class ActorTopo {
         if(actorGroupIdEnum == null){
             throw new RuntimeException("you must assign the idEnum");
         }
-        if(parallNum < 1){
-            parallNum = instanceCount;
+        if(instanceCount ==0){
+            instanceCount = 20;
         }
         synchronized (actorGroupIdEnum){
             if(initStatus.get() == INITED){
                 return this;
             }
-            buildActors(parallNum);
+            buildActors(instanceCount);
             initStatus.set(INITED);
         }
         GlobalActorHolder.holders.putIfAbsent(actorGroupIdEnum, this);
