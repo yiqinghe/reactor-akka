@@ -51,7 +51,7 @@ public class HttpAsyncClient {
         ServiceInstance chose = myRoundLoadBalancer.rotationChose(command.httpRequest.getServiceName());
         command.serviceInstance = chose;
         if(feign.Request.HttpMethod.GET.equals(command.httpRequest.getRequestMethod())) {
-            AsynHttpClient.get(chose.getUri().toString() + "/" + command.httpRequest.getRequestUrl(), command);
+            AsynHttpClient.get(chose.getUri().toString() + "/" + command.httpRequest.getRequestPath(), command);
         }else if(feign.Request.HttpMethod.POST.equals(command.httpRequest.getRequestMethod())){
 
         }

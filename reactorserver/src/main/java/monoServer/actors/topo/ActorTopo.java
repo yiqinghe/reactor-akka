@@ -2,8 +2,8 @@ package monoServer.actors.topo;
 
 import akka.actor.ActorRef;
 
-import annotation.BlockActor;
-import annotation.DBActor;
+import monoServer.annotation.BlockActor;
+import monoServer.annotation.DBActor;
 import monoServer.actors.AbstractDBActor;
 import monoServer.actors.BaseActor;
 import monoServer.actors.ResponseActor;

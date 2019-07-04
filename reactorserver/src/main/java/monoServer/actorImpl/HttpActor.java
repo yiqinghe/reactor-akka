@@ -1,5 +1,6 @@
 package monoServer.actorImpl;
 
+import feign.Request;
 import monoServer.actors.AbstractHttpActor;
 import monoServer.actors.BaseActor;
 import monoServer.common.ActContext;
@@ -10,11 +11,13 @@ import java.util.Map;
 
 public class HttpActor extends AbstractHttpActor {
 
+
     @Override
     public HttpRequest buildExecuteData(ActContext context) {
         //组装http请求信息，具体请求由框架执行
 
-        return new HttpRequest();
+        return new HttpRequest().withServiceName("feign-server")
+                .withRequestPath("/hi").withRequestMethod(Request.HttpMethod.GET);
     }
 
     @Override

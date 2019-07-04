@@ -2,11 +2,9 @@ package monoServer.actors;
 
 import akka.actor.Props;
 import akka.japi.Creator;
-import annotation.AkkaMaper;
-import annotation.DBActor;
-import monoServer.dao.UserDaoImpl;
+import monoServer.annotation.AkkaMaper;
+import monoServer.annotation.DBActor;
 import monoServer.SpringContext;
-import monoServer.command.HttpCommand;
 import monoServer.common.ActContext;
 
 import java.lang.reflect.Field;

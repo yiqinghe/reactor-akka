@@ -1,6 +1,6 @@
 package monoServer.actors;
 
-import annotation.AysncActor;
+import monoServer.annotation.AysncActor;
 import monoServer.common.ActContext;
 import monoServer.listener.AsynCommandListener;
 

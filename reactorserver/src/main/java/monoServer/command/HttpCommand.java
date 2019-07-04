@@ -1,6 +1,6 @@
 package monoServer.command;
 
-import annotation.AkkaMaper;
+import monoServer.annotation.AkkaMaper;
 import monoServer.dao.UserDao;
 
 public class HttpCommand {

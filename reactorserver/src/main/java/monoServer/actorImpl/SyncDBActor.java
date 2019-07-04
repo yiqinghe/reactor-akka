@@ -1,6 +1,6 @@
 package monoServer.actorImpl;
 
-import annotation.AkkaMaper;
+import monoServer.annotation.AkkaMaper;
 import monoServer.dao.UserDao;
 import monoServer.actors.AbstractDBActor;
 import monoServer.actors.BaseActor;

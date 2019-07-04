@@ -1,6 +1,5 @@
 package monoServer.actorImpl;
 
-import annotation.DBActor;
 import monoServer.actors.AbstractCommonActor;
 import monoServer.actors.BaseActor;
 import monoServer.common.ActContext;

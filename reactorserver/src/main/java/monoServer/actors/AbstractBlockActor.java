@@ -1,13 +1,6 @@
 package monoServer.actors;
 
-import akka.actor.Props;
-import akka.japi.Creator;
-import annotation.AkkaMaper;
-import annotation.BlockActor;
-import monoServer.command.HttpCommand;
-import monoServer.common.ActContext;
-
-import java.lang.reflect.Field;
+import monoServer.annotation.BlockActor;
 
 /**
  * 同步执行actor

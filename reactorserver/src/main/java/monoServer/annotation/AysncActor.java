@@ -1,4 +1,4 @@
-package annotation;
+package monoServer.annotation;
 
 import java.lang.annotation.*;
 
@@ -6,5 +6,5 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE,ElementType.FIELD})
 @Documented
 @Inherited
-public @interface DBActor {
+public @interface AysncActor {
 }

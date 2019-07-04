@@ -1,14 +1,16 @@
 package monoServer.request;
 
-import monoServer.Request;
-import reactor.core.publisher.MonoSink;
+import com.sun.org.apache.regexp.internal.RE;
+import feign.Request.HttpMethod;
+
+import java.util.Map;
 
 public class HttpRequest{
-    private feign.Request.HttpMethod requestMethod;
+    private HttpMethod requestMethod;
 
-    private String requestUrl;
+    private String requestPath;
 
-    private String requestBody;
+    private Map requestBody;
 
     private String httpResult;
 
@@ -18,8 +20,9 @@ public class HttpRequest{
         return serviceName;
     }
 
-    public void setServiceName(String serviceName) {
+    public HttpRequest withServiceName(String serviceName) {
         this.serviceName = serviceName;
+        return this;
     }
 
     public String getHttpResult() {
@@ -34,23 +37,26 @@ public class HttpRequest{
         return requestMethod;
     }
 
-    public void setRequestMethod(feign.Request.HttpMethod requestMethod) {
+    public HttpRequest withRequestMethod(feign.Request.HttpMethod requestMethod) {
         this.requestMethod = requestMethod;
+        return this;
     }
 
-    public String getRequestUrl() {
-        return requestUrl;
+    public String getRequestPath() {
+        return requestPath;
     }
 
-    public void setRequestUrl(String requestUrl) {
-        this.requestUrl = requestUrl;
+    public HttpRequest withRequestPath(String requestPath) {
+        this.requestPath = requestPath;
+        return this;
     }
 
-    public String getRequestBody() {
+    public Map getRequestBody() {
         return requestBody;
     }
 
-    public void setRequestBody(String requestBody) {
+    public HttpRequest withRequestBody(Map requestBody) {
         this.requestBody = requestBody;
+        return this;
     }
 }

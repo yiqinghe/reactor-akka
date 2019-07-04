@@ -1,4 +1,4 @@
-package annotation;
+package monoServer.annotation;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.web.bind.annotation.RequestMethod;
