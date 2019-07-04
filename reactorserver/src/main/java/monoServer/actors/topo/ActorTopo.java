@@ -84,6 +84,9 @@ public class ActorTopo {
     }
 
     public ActorTopo build(int parallNum) {
+        if(initStatus.get() == INITED){
+            return this;
+        }
         if(frist == null){
             throw  new RuntimeException("you must assign the frist actor");
         }
@@ -92,10 +95,6 @@ public class ActorTopo {
         }
         if(parallNum < 1){
             parallNum = instanceCount;
-        }
-        //每个actorref实例化20个
-        if(initStatus.get() == INITED){
-            return this;
         }
         synchronized (actorGroupIdEnum){
             if(initStatus.get() == INITED){
@@ -132,7 +131,7 @@ public class ActorTopo {
 
     private void buildActors(int parallNum){
         totalActors = new HashMap<>();
-        List<ActorRef> actorList = null;
+        List<ActorRef> actorList;
         for (Class<? extends BaseActor> actorClass: actorClasses) {
             actorList = new ArrayList<>();
             boolean isBlock = false;
@@ -144,7 +143,7 @@ public class ActorTopo {
                 isDB = true;
             }
             for (int i = 0; i < parallNum; i++) {
-                ActorRef actorRef = null;
+                ActorRef actorRef;
                 if(isBlock) {
                     if(isDB){
                         actorRef = GlobalActorHolder.system.actorOf(AbstractDBActor.props(actorClass).withDispatcher("blocking-io-dispatcher")
