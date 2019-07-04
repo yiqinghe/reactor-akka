@@ -21,7 +21,13 @@ public class ActorTopo {
 
     private static final int INITING = 1;
 
-    private static final int INITED = 2;
+    private static final int INITING_TOPO = 2;
+
+    private static final int INITING_FRIST = 3;
+
+    private static final int INITING_BUILD = 4;
+
+    private static final int INITED = 5;
 
     private Class<? extends BaseActor> frist;
 
@@ -68,11 +74,11 @@ public class ActorTopo {
     private AtomicInteger initStatus = new AtomicInteger(NOT_INITED);
     private ActorTopo(ActorGroupIdEnum actorGroupIdEnum){
         this.actorGroupIdEnum = actorGroupIdEnum;
-        this.initStatus.compareAndSet(NOT_INITED,INITING);
+        this.initStatus.set(INITING);
     }
 
     public ActorTopo topo(Class<? extends BaseActor>... actorClasses) throws IllegalAccessException, InstantiationException {
-        if(initStatus.get() > INITING){
+        if(initStatus.get() == INITED || !initStatus.compareAndSet(INITING,INITING_TOPO)){
             return this;
         }
         if(actorClasses != null) {
@@ -82,7 +88,7 @@ public class ActorTopo {
     }
 
     public ActorTopo frist(Class<? extends BaseActor> actor){
-        if(initStatus.get() >INITING){
+        if(initStatus.get() == INITED || !initStatus.compareAndSet(INITING,INITING_FRIST)){
             return this;
         }
         this.frist = actor;
@@ -90,7 +96,7 @@ public class ActorTopo {
     }
 
     public ActorTopo build(int parallNum) throws InstantiationException, IllegalAccessException {
-        if(initStatus.get() >INITING){
+        if(initStatus.get() == INITED || !initStatus.compareAndSet(INITING,INITING_BUILD)){
             return this;
         }
         if(frist == null){
@@ -154,7 +160,7 @@ public class ActorTopo {
         totalActors.put(ResponseActor.class,actorList);
 
         GlobalActorHolder.holders.putIfAbsent(actorGroupIdEnum, this);
-        initStatus.compareAndSet(INITING,INITED);
+        initStatus.set(INITED);
         return this;
     }
 
