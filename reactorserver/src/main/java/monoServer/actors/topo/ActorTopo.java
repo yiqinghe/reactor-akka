@@ -19,11 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ActorTopo {
     private static final int NOT_INITED = 0;
 
-    private static final int INITING = 1;
-
-    private static final int INITING_BUILD = 2;
-
-    private static final int INITED = 3;
+    private static final int INITED = 1;
 
     private Class<? extends BaseActor> frist;
 
@@ -70,7 +66,6 @@ public class ActorTopo {
     private AtomicInteger initStatus = new AtomicInteger(NOT_INITED);
     private ActorTopo(ActorGroupIdEnum actorGroupIdEnum){
         this.actorGroupIdEnum = actorGroupIdEnum;
-        this.initStatus.set(INITING);
     }
 
     public ActorTopo topo(Class<? extends BaseActor>... actorClasses){
@@ -99,8 +94,11 @@ public class ActorTopo {
             parallNum = instanceCount;
         }
         //每个actorref实例化20个
+        if(initStatus.get() == INITED){
+            return this;
+        }
         synchronized (actorGroupIdEnum){
-            if(initStatus.get() == INITED || !initStatus.compareAndSet(INITING,INITING_BUILD)){
+            if(initStatus.get() == INITED){
                 return this;
             }
             buildActors(parallNum);
