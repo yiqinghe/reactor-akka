@@ -8,6 +8,7 @@ import monoServer.common.ActContext;
 import monoServer.common.GlobalActorHolder;
 
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class BaseActor extends AbstractActor{
@@ -32,12 +33,11 @@ public abstract class BaseActor extends AbstractActor{
     }
 
     protected int incrementAndGetModulo(int modulo,AtomicInteger nextServerCyclicCounter) {
-
         for (;;) {
             int current = nextServerCyclicCounter.get();
             int next = (current + 1) % modulo;
             if (nextServerCyclicCounter.compareAndSet(current, next))
-                System.out.println(this.getClass().getSimpleName()+"---"+next);
+                //System.out.println(this.getClass().getSimpleName()+"---"+next);
                 return next;
         }
     }

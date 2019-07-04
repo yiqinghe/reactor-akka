@@ -10,6 +10,7 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
@@ -48,7 +49,7 @@ public class Controller {
     @Autowired
     public  MyRoundLoadBalancer myRoundLoadBalancer;
 
-    @RequestMapping(value = "/sayHello")
+    @RequestMapping(value = "/sayHello",method = RequestMethod.GET)
     public Mono<String> sayHello() throws InstantiationException, IllegalAccessException {
       // System.out.println("Request received");
         //Object userDao111 = SpringContext.getBean("userDao111");

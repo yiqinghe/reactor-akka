@@ -17,6 +17,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class ActorTopo {
+    private static final int NOT_INITED = 0;
+
+    private static final int INITING = 1;
+
+    private static final int INITED = 2;
 
     private Class<? extends BaseActor> frist;
 
@@ -52,22 +57,22 @@ public class ActorTopo {
         if(GlobalActorHolder.holders.get(actorGroupIdEnum) == null){
             synchronized (actorGroupIdEnum){
                 if(GlobalActorHolder.holders.get(actorGroupIdEnum) == null){
-                    return new ActorTopo(actorGroupIdEnum);
-                }else{
-                    return GlobalActorHolder.holders.get(actorGroupIdEnum);
+                    GlobalActorHolder.holders.put(actorGroupIdEnum,new ActorTopo(actorGroupIdEnum));
                 }
+                return GlobalActorHolder.holders.get(actorGroupIdEnum);
             }
         }else{
             return GlobalActorHolder.holders.get(actorGroupIdEnum);
         }
     }
-    private boolean inited = false;
+    private AtomicInteger initStatus = new AtomicInteger(NOT_INITED);
     private ActorTopo(ActorGroupIdEnum actorGroupIdEnum){
         this.actorGroupIdEnum = actorGroupIdEnum;
+        this.initStatus.compareAndSet(NOT_INITED,INITING);
     }
 
     public ActorTopo topo(Class<? extends BaseActor>... actorClasses) throws IllegalAccessException, InstantiationException {
-        if(inited){
+        if(initStatus.get() > INITING){
             return this;
         }
         if(actorClasses != null) {
@@ -77,7 +82,7 @@ public class ActorTopo {
     }
 
     public ActorTopo frist(Class<? extends BaseActor> actor){
-        if(inited){
+        if(initStatus.get() >INITING){
             return this;
         }
         this.frist = actor;
@@ -85,7 +90,7 @@ public class ActorTopo {
     }
 
     public ActorTopo build(int parallNum) throws InstantiationException, IllegalAccessException {
-        if(inited){
+        if(initStatus.get() >INITING){
             return this;
         }
         if(frist == null){
@@ -149,7 +154,7 @@ public class ActorTopo {
         totalActors.put(ResponseActor.class,actorList);
 
         GlobalActorHolder.holders.putIfAbsent(actorGroupIdEnum, this);
-        inited=true;
+        initStatus.compareAndSet(INITING,INITED);
         return this;
     }
 
