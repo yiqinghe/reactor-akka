@@ -50,9 +50,7 @@ public class Controller {
     public  MyRoundLoadBalancer myRoundLoadBalancer;
 
     @RequestMapping(value = "/sayHello",method = RequestMethod.GET)
-    public Mono<String> sayHello() throws InstantiationException, IllegalAccessException {
-      // System.out.println("Request received");
-        //Object userDao111 = SpringContext.getBean("userDao111");
+    public Mono<String> sayHello(){
         Map<String,Object> requestData = new HashMap<>();
         requestData.put("userId","16999999");
         Mono<String> kk = Mono.just("hello");
