@@ -17,6 +17,6 @@ public abstract class AbstractAsynActor extends BaseActor implements AsynCommand
      * @param exception
      * @return
      */
-    public abstract Class<? extends BaseActor> errorAndNext(ActContext context,Throwable exception);
+    public abstract Class<? extends BaseActor> executeNextOnError(ActContext context, Throwable exception);
 
 }

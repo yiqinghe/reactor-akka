@@ -12,7 +12,7 @@ public class IntegrateDataActor extends AbstractCommonActor {
     }
 
     @Override
-    public Class<? extends BaseActor> executeAndNext(ActContext context, Object data) {
+    public Class<? extends BaseActor> executeNextOnSuccess(ActContext context, Object data) {
         return null;
     }
 }

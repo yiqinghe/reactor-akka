@@ -21,7 +21,7 @@ public class SayHelloHttpActor extends AbstractHttpActor {
     }
 
     @Override
-    public Class<? extends BaseActor> executeAndNext(ActContext context,Object data) {
+    public Class<? extends BaseActor> executeNextOnSuccess(ActContext context, Object data) {
         //异步http执行完以后的操作,返回null就直接走responseActor
         Map<String,Object> result = new HashMap<>();
         result.put("CODE","200");
@@ -33,7 +33,7 @@ public class SayHelloHttpActor extends AbstractHttpActor {
 
 
     @Override
-    public Class<? extends BaseActor> errorAndNext(ActContext context, Throwable exception) {
+    public Class<? extends BaseActor> executeNextOnError(ActContext context, Throwable exception) {
         return null;
     }
 }

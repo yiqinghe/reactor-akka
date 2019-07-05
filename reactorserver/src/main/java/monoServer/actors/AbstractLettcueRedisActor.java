@@ -1,16 +1,8 @@
 package monoServer.actors;
 
-import akka.actor.AbstractActor;
-import com.google.common.cache.Cache;
 import monoServer.common.ActContext;
 import monoServer.enums.RedisCommandEnum;
 import monoServer.lettuce.LettuceClient;
-import monoServer.request.HttpRequest;
-
-import java.util.List;
-import java.util.function.Consumer;
-
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 
 public abstract class AbstractLettcueRedisActor extends AbstractAsynActor {
     @Override
@@ -25,7 +17,7 @@ public abstract class AbstractLettcueRedisActor extends AbstractAsynActor {
 
     @Override
     public void onSuccess(ActContext context, Object result) {
-        Class<? extends BaseActor> actorRefClass =  executeAndNext(context,result);
+        Class<? extends BaseActor> actorRefClass =  executeNextOnSuccess(context,result);
         dispatch(actorRefClass,context);
     }
 

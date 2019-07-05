@@ -57,5 +57,5 @@ public abstract class BaseActor extends AbstractActor{
      * @param data
      * @return
      */
-    public abstract Class<? extends BaseActor> executeAndNext(ActContext context,Object data);
+    public abstract Class<? extends BaseActor> executeNextOnSuccess(ActContext context, Object data);
 }

@@ -14,7 +14,7 @@ public class LettcueRedisActor extends AbstractLettcueRedisActor {
     }
 
     @Override
-    public Class<? extends BaseActor> executeAndNext(ActContext context, Object data) {
+    public Class<? extends BaseActor> executeNextOnSuccess(ActContext context, Object data) {
         List<String> result = (List<String>)data;
 
         if(result == null || result.size() < 1){
@@ -28,7 +28,7 @@ public class LettcueRedisActor extends AbstractLettcueRedisActor {
     }
 
     @Override
-    public Class<? extends BaseActor> errorAndNext(ActContext context, Throwable exception) {
+    public Class<? extends BaseActor> executeNextOnError(ActContext context, Throwable exception) {
         return null;
     }
 }
