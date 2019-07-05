@@ -9,7 +9,7 @@ import monoServer.request.HttpRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpActor extends AbstractHttpActor {
+public class SayHelloHttpActor extends AbstractHttpActor {
 
 
     @Override
