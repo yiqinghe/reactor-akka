@@ -18,7 +18,7 @@ public abstract class AbstractLettcueRedisActor extends AbstractAsynActor {
 
     @Override
     public void onSuccess(ActContext context, Object result) {
-        Class<? extends BaseActor> actorRefClass =  executeAndNext(context,result);
+        Class<? extends BaseActor> actorRefClass =  executeNextOnSuccess(context,result);
         dispatch(actorRefClass,context);
     }
 

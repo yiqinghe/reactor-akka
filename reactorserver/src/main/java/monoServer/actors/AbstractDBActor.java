@@ -41,7 +41,7 @@ public abstract class AbstractDBActor extends AbstractBlockActor{
         return receiveBuilder()
                 .match(ActContext.class, context -> {
                     Object dbObject = this.buildExecuteData(context);
-                    Class<? extends BaseActor> actorRefClass = this.executeAndNext(context,dbObject);
+                    Class<? extends BaseActor> actorRefClass = this.executeNextOnSuccess(context,dbObject);
                     dispatch(actorRefClass,context);
                 })
                 .build();

@@ -19,7 +19,7 @@ public class SayHelloFristActor extends AbstractCommonActor {
      * @return
      */
     @Override
-    public Class<? extends BaseActor> executeAndNext(ActContext context,Object data) {
+    public Class<? extends BaseActor> executeNextOnSuccess(ActContext context, Object data) {
         // todo do some business
         return SyncDBActor.class;
     }

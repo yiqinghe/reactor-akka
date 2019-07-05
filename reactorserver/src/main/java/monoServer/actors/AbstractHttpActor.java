@@ -2,7 +2,6 @@ package monoServer.actors;
 
 import monoServer.common.ActContext;
 import monoServer.http.HttpAsyncClient;
-import monoServer.listener.AsynCommandListener;
 import monoServer.request.HttpRequest;
 
 public abstract class AbstractHttpActor extends AbstractAsynActor {
@@ -31,7 +30,7 @@ public abstract class AbstractHttpActor extends AbstractAsynActor {
 
     @Override
     public void onSuccess(ActContext context, Object httpresult) {
-        Class<? extends BaseActor> actorRefClass = executeAndNext(context,httpresult);
+        Class<? extends BaseActor> actorRefClass = executeNextOnSuccess(context,httpresult);
         dispatch(actorRefClass,context);
     }
 
