@@ -37,6 +37,7 @@ public abstract class AbstractHttpActor extends AbstractAsynActor {
 
     @Override
     public void onFail(ActContext context, Throwable exception) {
-
+        Class<? extends BaseActor> aClass = errorAndNext(context, exception);
+        dispatch(aClass,context);
     }
 }

@@ -3,6 +3,7 @@ package monoServer.request;
 import com.sun.org.apache.regexp.internal.RE;
 import feign.Request.HttpMethod;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest{
@@ -10,11 +11,26 @@ public class HttpRequest{
 
     private String requestPath;
 
-    private Map requestBody;
+    private String pathVarible;
+
+    private String requestBody;
 
     private String httpResult;
 
     private String serviceName;
+
+    private Map<String,Object> params = new HashMap<>();
+
+
+    public HttpRequest withParam(String key,Object value){
+        params.put(key,value);
+        return this;
+    }
+
+    public HttpRequest withParams(Map<String,Object> parsms){
+        params.putAll(parsms);
+        return this;
+    }
 
     public String getServiceName() {
         return serviceName;
@@ -51,11 +67,11 @@ public class HttpRequest{
         return this;
     }
 
-    public Map getRequestBody() {
+    public String getRequestBody() {
         return requestBody;
     }
 
-    public HttpRequest withRequestBody(Map requestBody) {
+    public HttpRequest withRequestBody(String requestBody) {
         this.requestBody = requestBody;
         return this;
     }

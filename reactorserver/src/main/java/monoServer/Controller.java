@@ -5,6 +5,7 @@ import monoServer.actorImpl.SayHelloFristActor;
 import monoServer.actorImpl.SyncDBActor;
 import monoServer.actors.topo.ActorTopo;
 import monoServer.enums.ActorGroupIdEnum;
+import monoServer.feignclient.FeignClientSao;
 import monoServer.redission.RedissionClient;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
@@ -50,8 +51,12 @@ public class Controller {
     @Autowired
     public  MyRoundLoadBalancer myRoundLoadBalancer;
 
+    @Autowired
+    public FeignClientSao feignClientSao;
+
     @RequestMapping(value = "/sayHello",method = RequestMethod.GET)
     public Mono<String> sayHello(){
+        feignClientSao.hi2("uft-8",111L,"name","body","aaa");
         Map<String,Object> requestData = new HashMap<>();
         requestData.put("userId","16999999");
         Mono<String> kk = Mono.just("hello");

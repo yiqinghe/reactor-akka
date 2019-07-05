@@ -5,10 +5,13 @@ import monoServer.SpringContext;
 import monoServer.common.ActContext;
 import monoServer.common.Contance;
 import monoServer.listener.AsynCommandListener;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
@@ -18,6 +21,8 @@ import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.nio.reactor.IOReactorException;
 import org.apache.http.util.EntityUtils;
 import org.springframework.cloud.client.ServiceInstance;
+
+import java.io.UnsupportedEncodingException;
 
 public class HttpAsyncClient {
 
@@ -57,6 +62,8 @@ public class HttpAsyncClient {
         }
         return asynRpcInovker;
     }
+
+
 
 
     public static HttpAsyncClient getInstance() {
@@ -113,6 +120,14 @@ public class HttpAsyncClient {
 
             return client;
         }
+
+        public static void post(String url,Command command) throws UnsupportedEncodingException {
+            HttpPost httpPost = new HttpPost(url);
+            StringEntity entity = new StringEntity(command.httpRequest.getRequestBody());
+            httpPost.setEntity(entity);
+
+        }
+
         public static void get(String url, HttpAsyncClient.Command command){
             final HttpGet request2 = new HttpGet(url);
             getInstance().execute(request2, new FutureCallback<HttpResponse>() {

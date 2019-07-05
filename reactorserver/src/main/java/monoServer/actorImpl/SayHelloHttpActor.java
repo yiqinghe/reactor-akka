@@ -17,7 +17,10 @@ public class SayHelloHttpActor extends AbstractHttpActor {
         //组装http请求信息，具体请求由框架执行
 
         return new HttpRequest().withServiceName("feign-server")
-                .withRequestPath("/hi").withRequestMethod(Request.HttpMethod.GET);
+                .withRequestPath("/hi")
+                .withRequestMethod(Request.HttpMethod.GET)
+                .withParam("name","jim")
+                .withRequestBody("{name:jerry,age:18}");
     }
 
     @Override
@@ -26,7 +29,7 @@ public class SayHelloHttpActor extends AbstractHttpActor {
         Map<String,Object> result = new HashMap<>();
         result.put("CODE","200");
         result.put("MSG","OK");
-        result.put("DATA",null);
+        result.put("DATA",data);
         context.setResponseData(result);
         return null;
     }

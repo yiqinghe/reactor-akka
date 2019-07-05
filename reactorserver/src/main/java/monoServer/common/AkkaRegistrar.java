@@ -2,7 +2,6 @@ package monoServer.common;
 
 import monoServer.annotation.AkkaFeignClient;
 import monoServer.annotation.EnableAkka;
-import monoServer.feignclient.AkkaFeignClientFactoryBean;
 import monoServer.feignclient.AkkaFeignClientSpecification;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -110,7 +109,7 @@ public class AkkaRegistrar implements ImportBeanDefinitionRegistrar,EnvironmentA
                                      AnnotationMetadata annotationMetadata, Map<String, Object> attributes) {
         String className = annotationMetadata.getClassName();
         BeanDefinitionBuilder definition = BeanDefinitionBuilder
-                .genericBeanDefinition(AkkaFeignClientFactoryBean.class);
+                .genericBeanDefinition(this.getClass());
         definition.addPropertyValue("url", getUrl(attributes));
         definition.addPropertyValue("path", getPath(attributes));
         String name = getName(attributes);
