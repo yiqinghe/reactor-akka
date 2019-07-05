@@ -62,21 +62,6 @@ public class Controller {
                     .parall(20)
                     .build()
                     .start(requestData);
-//        //myRoundLoadBalancer.chose("feign-server");
-//        Mono<String> monoResult = Mono.create(deferredResult->{
-//            String hhhh =userId;
-//            String kvalue = kk.block();
-//            sayHelloService.sayHello(deferredResult);
-//        });
-//
-//
-//      // System.out.println("Servlet thread released");
-//
-//        if(acceptCount.addAndGet(1)%10000==0){
-//            System.out.println("acceptCount:"+acceptCount);
-//        }
-//
-//        return monoResult;
     }
 
 
