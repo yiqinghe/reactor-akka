@@ -34,9 +34,13 @@ public class Controller {
         return "index";
     }
 
-    @RequestMapping(value = "/requestGet")
+    @RequestMapping(value = "/requestGet",method = RequestMethod.GET)
     public String requestGet() {
-
+        try {
+            Thread.sleep(1500L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return "requestGet";
     }
 
