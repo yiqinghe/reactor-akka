@@ -11,6 +11,7 @@ public class PutRequest extends HttpLancher {
 
 
     public static void put(String url,Command command) throws UnsupportedEncodingException {
+        url = wrapPathParams(url,command.httpRequest.getPathVaribles());
         HttpPut httpPut = new HttpPut(url);
         StringEntity entity = new StringEntity(command.httpRequest.getRequestBody());
         httpPut.setEntity(entity);

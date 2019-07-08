@@ -69,7 +69,7 @@ public  class HttpLancher {
         }
     }
 
-    private static String wrapPathParams(String url, Map<String,String> pathVaribles){
+    public static String wrapPathParams(String url, Map<String,String> pathVaribles){
         //eg localhost:8080/hello/{name}
         for(Map.Entry<String,String> entry : pathVaribles.entrySet()){
             String path = "{".concat(entry.getKey()).concat("}");
@@ -88,8 +88,9 @@ public  class HttpLancher {
 
     public static String packParamsAndUrl(AbstractExecutionAwareRequest request, HttpRequest requestParams
         ,String url) throws UnsupportedEncodingException {
+        //1.设置headers
         wrapHeaders(request,requestParams);
-        url = wrapPathParams(url,requestParams.getPathVaribles());
+        //2.设置url参数
         url = wrapParams(url,requestParams);
         return url;
     }

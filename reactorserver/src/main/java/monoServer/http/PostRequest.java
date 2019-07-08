@@ -10,6 +10,7 @@ public class PostRequest extends HttpLancher {
 
 
     public static void post(String url,Command command) throws UnsupportedEncodingException {
+        url = wrapPathParams(url,command.httpRequest.getPathVaribles());
         HttpPost httpPost = new HttpPost(url);
         StringEntity entity = new StringEntity(command.httpRequest.getRequestBody());
         httpPost.setEntity(entity);

@@ -1,8 +1,6 @@
 package monoServer;
 
-import monoServer.actorImpl.SayHelloHttpGetActor;
-import monoServer.actorImpl.SayHelloFristActor;
-import monoServer.actorImpl.SyncDBActor;
+import monoServer.actorImpl.*;
 import monoServer.actors.topo.ActorTopo;
 import monoServer.enums.ActorGroupIdEnum;
 import monoServer.feignclient.FeignClientSao;
@@ -60,13 +58,13 @@ public class Controller {
 
     @RequestMapping(value = "/sayHello",method = RequestMethod.GET)
     public Mono<String> sayHello(){
-        feignClientSao.hi2("uft-8",111L,"name","body","aaa");
+    //    feignClientSao.hi2("uft-8",111L,"name","body","aaa");
         Map<String,Object> requestData = new HashMap<>();
         requestData.put("userId","16999999");
         Mono<String> kk = Mono.just("hello");
             return  ActorTopo.newBuilder(ActorGroupIdEnum.SAY_HELLO)
                     .frist(SayHelloFristActor.class)
-                    .topo(SyncDBActor.class, SayHelloHttpGetActor.class)
+                    .topo(SyncDBActor.class, SayHelloHttpGetActor.class, SayHelloHttpPutActor.class, SayHelloHttpPostActor.class,SayHelloHttpDeleteActor.class)
                     .parall(20)
                     .build()
                     .start(requestData);

@@ -21,6 +21,6 @@ public class SayHelloFristActor extends AbstractCommonActor {
     @Override
     public Class<? extends BaseActor> executeNextOnSuccess(ActContext context, Object data) {
         // todo do some business
-        return SyncDBActor.class;
+        return SayHelloHttpGetActor.class;
     }
 }

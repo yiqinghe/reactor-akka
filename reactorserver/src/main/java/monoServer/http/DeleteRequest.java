@@ -11,6 +11,7 @@ public class DeleteRequest extends HttpLancher {
 
 
     public static void delete(String url,Command command) throws UnsupportedEncodingException {
+        url = wrapPathParams(url,command.httpRequest.getPathVaribles());
         HttpDelete httpDelete= new HttpDelete(url);
         packParamsAndUrl(httpDelete,command.httpRequest,url);
         HttpAsyncClient.AsyncHttpClient.getInstance().execute(httpDelete,new CallBack(command,url));
