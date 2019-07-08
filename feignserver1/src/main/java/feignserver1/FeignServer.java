@@ -5,18 +5,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 public class FeignServer {
 
-    @RequestMapping(method = RequestMethod.GET,value = "/test1")
-    public Integer test1(@RequestParam("number") Integer number){
+    @RequestMapping(method = RequestMethod.GET,value = "/test1/ha{name}")
+    public Integer test1(@RequestParam("number") Integer number
+                    ,@PathVariable("name")String name,@RequestBody SimpleClass body){
+        System.out.println(name);
+        System.out.println(body.getMsg()+"---"+body.getCode());
+        return number+1;
+    }
+
+    @RequestMapping(method = RequestMethod.POST,value = "/test1/ha{name}")
+    public Integer test2(@RequestParam("number") Integer number
+            ,@PathVariable("name")String name,@RequestBody SimpleClass body){
+        System.out.println(name);
+        System.out.println(body.getMsg()+"---"+body.getCode());
+        return number+1;
+    }
+
+    @RequestMapping(method = RequestMethod.PUT,value = "/test1/ha{name}")
+    public Integer test3(@RequestParam("number") Integer number
+            ,@PathVariable("name")String name,@RequestBody SimpleClass body){
+        System.out.println(name);
+        System.out.println(body.getMsg()+"---"+body.getCode());
+        return number+1;
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE,value = "/test1/ha{name}")
+    public Integer test4(@RequestParam("number") Integer number
+            ,@PathVariable("name")String name,@RequestBody SimpleClass body){
+        System.out.println(name);
+        System.out.println(body.getMsg()+"---"+body.getCode());
         return number+1;
     }
 
@@ -35,4 +59,6 @@ public class FeignServer {
         }
         return "这是端口为："+port+"实例项目";
     }
+
+
 }

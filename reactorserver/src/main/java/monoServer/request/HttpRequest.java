@@ -11,7 +11,7 @@ public class HttpRequest{
 
     private String requestPath;
 
-    private String pathVarible;
+    private Map<String,String> pathVarible = new HashMap<>();
 
     private String requestBody;
 
@@ -19,15 +19,49 @@ public class HttpRequest{
 
     private String serviceName;
 
-    private Map<String,Object> params = new HashMap<>();
+    private Map<String,String> headers = new HashMap<>();
+
+    private Map<String,String> params = new HashMap<>();
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public Map<String, String> getPathVaribles() {
+        return pathVarible;
+    }
+
+    public HttpRequest withPathVarible(String pathName,String value) {
+        this.pathVarible.put(pathName,value);
+        return this;
+    }
+
+    public HttpRequest withPathVaribles(Map<String, String> pathVarible) {
+        this.pathVarible.putAll(pathVarible);
+        return this;
+    }
 
 
-    public HttpRequest withParam(String key,Object value){
+    public HttpRequest withHeaders(Map<String, String> headers) {
+        this.headers.putAll(headers);
+        return this;
+    }
+
+    public HttpRequest withHeader(String headerName,String value) {
+        this.headers.put(headerName,value);
+        return this;
+    }
+
+    public HttpRequest withParam(String key, String value){
         params.put(key,value);
         return this;
     }
 
-    public HttpRequest withParams(Map<String,Object> parsms){
+    public HttpRequest withParams(Map<String,String> parsms){
         params.putAll(parsms);
         return this;
     }
@@ -72,6 +106,7 @@ public class HttpRequest{
     }
 
     public HttpRequest withRequestBody(String requestBody) {
+        //对象对json序列化
         this.requestBody = requestBody;
         return this;
     }

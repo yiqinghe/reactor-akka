@@ -25,8 +25,9 @@ public abstract class BaseActor extends AbstractActor{
         if(actorRefClass == null){
             actorRefClass = ResponseActor.class;
         }
-
+        //全局topo holder获取对于serviceid的holder
         ActorTopo actorTopo = GlobalActorHolder.holders.get(context.getActorGroupIdEnum());
+        //topo中获取子actor的列表 和轮询计数器，做负载均衡
         List<ActorRef> actorRefs = actorTopo.getTotalActors().get(actorRefClass);
         ActorRef nextRef = actorRefs.get(incrementAndGetModulo(actorTopo.getInstanceCount(),actorTopo.getRoundCounters().get(this.getClass())));
         nextRef.tell(context,getSelf());

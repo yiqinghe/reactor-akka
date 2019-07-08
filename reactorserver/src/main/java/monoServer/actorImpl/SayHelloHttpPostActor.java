@@ -1,6 +1,8 @@
 package monoServer.actorImpl;
 
+import com.alibaba.fastjson.JSON;
 import feign.Request;
+import monoServer.SimpleClass;
 import monoServer.actors.AbstractHttpActor;
 import monoServer.actors.BaseActor;
 import monoServer.common.ActContext;
@@ -9,18 +11,22 @@ import monoServer.request.HttpRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SayHelloHttpActor extends AbstractHttpActor {
+public class SayHelloHttpPostActor extends AbstractHttpActor {
 
 
     @Override
     public HttpRequest buildExecuteData(ActContext context) {
         //组装http请求信息，具体请求由框架执行
-
+        SimpleClass body = new SimpleClass();
+        body.setCode("200");
+        body.setMsg("OK");
         return new HttpRequest().withServiceName("feign-server")
-                .withRequestPath("/hi")
-                .withRequestMethod(Request.HttpMethod.GET)
-                .withParam("name","jim")
-                .withRequestBody("{name:jerry,age:18}");
+                .withRequestPath("/test1/ha{name}")
+                .withRequestMethod(Request.HttpMethod.POST)
+                .withParam("number","1")
+                .withPathVarible("name","jett")
+                .withHeader("header1","headervalue")
+                .withRequestBody(JSON.toJSONString(body));
     }
 
     @Override
@@ -31,7 +37,7 @@ public class SayHelloHttpActor extends AbstractHttpActor {
         result.put("MSG","OK");
         result.put("DATA",data);
         context.setResponseData(result);
-        return null;
+        return SayHelloHttpPutActor.class;
     }
 
 

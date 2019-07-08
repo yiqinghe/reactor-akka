@@ -20,6 +20,7 @@ public abstract class AbstractDBActor extends AbstractBlockActor{
         return Props.create(actorClass, new Creator() {
             @Override
             public Object create() throws Exception {
+                //反射设置db类actor的mapper对象实例，实例从spring容器拿
                 AbstractDBActor abstractDBActor = (AbstractDBActor) actorClass.newInstance();
                 Field[] declaredFields = actorClass.getDeclaredFields();
                 for (Field field:declaredFields) {

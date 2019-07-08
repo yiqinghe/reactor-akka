@@ -16,17 +16,26 @@ fun main() {
        // retryIO(suspend { println(Thread.currentThread().name+"1111callback") })
         //retryIO2(suspend{print("3333")})
        //var result :Int =  test1()
-        GlobalScope.async {
-            //test1()
-            syncHttp(block = {
-                var entity:HttpEntity = it.entity
-                println(Thread.currentThread().name+"httpcallback---"+EntityUtils.toString(entity))
-            })
+        var count :Int = 0
+        while (count < 5) {
+            GlobalScope.async {
+                //test1()
+                syncHttp(block = {
+                    var entity: HttpEntity = it.entity
+                    println(Thread.currentThread().name + "httpcallback---" + EntityUtils.toString(entity))
+                })
 
-            syncHttp2(block = {
-                println(Thread.currentThread().name+"httpcallback---"+it)
-            })
+//            syncHttp2(block = {
+//                println(Thread.currentThread().name+"httpcallback---"+it)
+//            })
+//            while (true){
+//                delay(300L)
+//                println(Thread.currentThread().name+"---222")
+//            }
+            }
+            count++
         }
+
         while (true){
             delay(300L)
             println(Thread.currentThread().name+"---222")
@@ -78,6 +87,7 @@ suspend fun <T> syncHttp2(block: suspend (result:String) -> T): T{
 }
 
  suspend fun <T> syncHttp(block: suspend (result:CloseableHttpResponse) -> T): T{
+     println(Thread.currentThread().name+"-----http begin")
      var httpclient: CloseableHttpClient = HttpClientBuilder.create().build()
      var httpGet : HttpGet = HttpGet("http://localhost:8080/requestGet")
      var response : CloseableHttpResponse

@@ -1,6 +1,7 @@
 package monoServer.actors;
 
 import monoServer.common.ActContext;
+import monoServer.http.Command;
 import monoServer.http.HttpAsyncClient;
 import monoServer.request.HttpRequest;
 
@@ -14,7 +15,7 @@ public abstract class AbstractHttpActor extends AbstractAsynActor {
                 .match(ActContext.class, context -> {
                     HttpRequest request = this.buildExecuteData(context);
                     //多次http调用 只会纪录上一次的信息
-                    HttpAsyncClient.Command clientCommand = new HttpAsyncClient.Command(context
+                    Command clientCommand = new Command(context
                             ,System.currentTimeMillis(),this,request);
                     HttpAsyncClient.getInstance().asynCall(clientCommand);
                 })

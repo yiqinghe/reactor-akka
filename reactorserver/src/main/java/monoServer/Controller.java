@@ -1,6 +1,6 @@
 package monoServer;
 
-import monoServer.actorImpl.SayHelloHttpActor;
+import monoServer.actorImpl.SayHelloHttpGetActor;
 import monoServer.actorImpl.SayHelloFristActor;
 import monoServer.actorImpl.SyncDBActor;
 import monoServer.actors.topo.ActorTopo;
@@ -66,7 +66,7 @@ public class Controller {
         Mono<String> kk = Mono.just("hello");
             return  ActorTopo.newBuilder(ActorGroupIdEnum.SAY_HELLO)
                     .frist(SayHelloFristActor.class)
-                    .topo(SyncDBActor.class, SayHelloHttpActor.class)
+                    .topo(SyncDBActor.class, SayHelloHttpGetActor.class)
                     .parall(20)
                     .build()
                     .start(requestData);
