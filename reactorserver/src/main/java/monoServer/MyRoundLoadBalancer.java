@@ -112,7 +112,7 @@ public class MyRoundLoadBalancer {
      * 简单处理失败实例
      * @param serviceInstance
      */
-    public void notifeFailedNode(ServiceInstance serviceInstance){
+    public void notifyFailedNode(ServiceInstance serviceInstance){
         if(serviceInstance != null){
             failedServices.put(serviceInstance.getUri().toString(),new Date().getTime());
         }

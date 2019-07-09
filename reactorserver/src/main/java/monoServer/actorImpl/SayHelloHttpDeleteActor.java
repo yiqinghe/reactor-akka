@@ -21,9 +21,9 @@ public class SayHelloHttpDeleteActor extends AbstractHttpActor {
         body.setCode("200");
         body.setMsg("OK");
         return new HttpRequest().withServiceName("feign-server")
-                .withRequestPath("/test1/ha{name}")
+                .withRequestPath("/test4/ha{name}")
                 .withRequestMethod(Request.HttpMethod.DELETE)
-                .withParam("number","1")
+                .withParam("number",(Integer.valueOf((String) context.getResponseData().get("PUTDATA")))+"1")
                 .withPathVarible("name","jett")
                 .withHeader("header1","headervalue")
                 .withRequestBody(JSON.toJSONString(body));
@@ -35,7 +35,7 @@ public class SayHelloHttpDeleteActor extends AbstractHttpActor {
         Map<String,Object> result = new HashMap<>();
         result.put("CODE","200");
         result.put("MSG","OK");
-        result.put("DATA",data);
+        result.put("DELETEDATA",data);
         context.setResponseData(result);
         return null;
     }

@@ -21,9 +21,9 @@ public class SayHelloHttpPutActor extends AbstractHttpActor {
         body.setCode("200");
         body.setMsg("OK");
         return new HttpRequest().withServiceName("feign-server")
-                .withRequestPath("/test1/ha{name}")
+                .withRequestPath("/test3/ha{name}")
                 .withRequestMethod(Request.HttpMethod.PUT)
-                .withParam("number","1")
+                .withParam("number",(Integer.valueOf((String) context.getResponseData().get("POSTDATA")))+"1")
                 .withPathVarible("name","jett")
                 .withHeader("header1","headervalue")
                 .withRequestBody(JSON.toJSONString(body));
@@ -35,9 +35,9 @@ public class SayHelloHttpPutActor extends AbstractHttpActor {
         Map<String,Object> result = new HashMap<>();
         result.put("CODE","200");
         result.put("MSG","OK");
-        result.put("DATA",data);
+        result.put("PUTDATA",data);
         context.setResponseData(result);
-        return null;
+        return SayHelloHttpDeleteActor.class;
     }
 
 

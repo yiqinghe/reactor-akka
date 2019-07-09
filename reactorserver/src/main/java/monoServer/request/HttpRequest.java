@@ -97,6 +97,9 @@ public class HttpRequest{
     }
 
     public HttpRequest withRequestPath(String requestPath) {
+        if(requestPath.startsWith("/")){
+            requestPath = requestPath.substring(1);
+        }
         this.requestPath = requestPath;
         return this;
     }

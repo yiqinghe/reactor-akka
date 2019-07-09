@@ -7,6 +7,7 @@ import monoServer.actors.AbstractHttpActor;
 import monoServer.actors.BaseActor;
 import monoServer.common.ActContext;
 import monoServer.request.HttpRequest;
+import scala.Int;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,9 +22,9 @@ public class SayHelloHttpPostActor extends AbstractHttpActor {
         body.setCode("200");
         body.setMsg("OK");
         return new HttpRequest().withServiceName("feign-server")
-                .withRequestPath("/test1/ha{name}")
+                .withRequestPath("/test2/ha{name}")
                 .withRequestMethod(Request.HttpMethod.POST)
-                .withParam("number","1")
+                .withParam("number",(Integer.valueOf((String) context.getResponseData().get("GETDATA")))+"1")
                 .withPathVarible("name","jett")
                 .withHeader("header1","headervalue")
                 .withRequestBody(JSON.toJSONString(body));
@@ -35,7 +36,7 @@ public class SayHelloHttpPostActor extends AbstractHttpActor {
         Map<String,Object> result = new HashMap<>();
         result.put("CODE","200");
         result.put("MSG","OK");
-        result.put("DATA",data);
+        result.put("POSTDATA",data);
         context.setResponseData(result);
         return SayHelloHttpPutActor.class;
     }

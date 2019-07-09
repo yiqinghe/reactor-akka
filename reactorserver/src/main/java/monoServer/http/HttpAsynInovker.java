@@ -128,7 +128,7 @@ public class HttpAsynInovker {
                     // http 访问失败，回调
                     System.out.println("failed:"+request2.getRequestLine() + "->" + ex);
                     command.request.setHttpResult("failed");
-                    SpringContext.getBean(MyRoundLoadBalancer.class).notifeFailedNode(command.serviceInstance);
+                    SpringContext.getBean(MyRoundLoadBalancer.class).notifyFailedNode(command.serviceInstance);
                     command.commandDoneListener.recall(command.request);
 
                 }

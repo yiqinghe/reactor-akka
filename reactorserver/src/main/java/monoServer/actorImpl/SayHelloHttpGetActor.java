@@ -21,11 +21,11 @@ public class SayHelloHttpGetActor extends AbstractHttpActor {
         body.setCode("200");
         body.setMsg("OK");
         return new HttpRequest().withServiceName("feign-server")
-                .withRequestPath("/test1/haJETT")
+                .withRequestPath("/test1/ha{name}")
                 .withRequestMethod(Request.HttpMethod.GET)
                 .withParam("number","1")
                 .withPathVarible("name","jett")
-                .withHeader("header1","headervalue")
+                .withHeader("Content-Type","application/json;charset=UTF-8")
                 .withRequestBody(JSON.toJSONString(body));
     }
 
@@ -35,7 +35,7 @@ public class SayHelloHttpGetActor extends AbstractHttpActor {
         Map<String,Object> result = new HashMap<>();
         result.put("CODE","200");
         result.put("MSG","OK");
-        result.put("DATA",data);
+        result.put("GETDATA",data);
         context.setResponseData(result);
         return SayHelloHttpPostActor.class;
     }

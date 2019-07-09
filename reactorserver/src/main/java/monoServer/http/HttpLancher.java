@@ -5,6 +5,7 @@ import feign.Request;
 import monoServer.MyRoundLoadBalancer;
 import monoServer.SpringContext;
 import monoServer.request.HttpRequest;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.AbstractExecutionAwareRequest;
 import org.apache.http.client.methods.HttpGet;
@@ -12,9 +13,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.util.EntityUtils;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
+
+import static org.apache.commons.lang.CharEncoding.UTF_8;
 
 public  class HttpLancher {
 
@@ -60,12 +66,16 @@ public  class HttpLancher {
         return prestr;
     }
 
-    private static void wrapHeaders(AbstractExecutionAwareRequest request, HttpRequest requestParams){
+    public static void wrapHeaders(AbstractExecutionAwareRequest request, HttpRequest requestParams){
         //把请求头也放进去
         if(requestParams.getHeaders() != null && requestParams.getHeaders().size() > 0) {
             for (Map.Entry<String, String> entry : requestParams.getHeaders().entrySet()) {
-                request.setHeader(entry.getKey(), entry.getValue());
+                request.addHeader(entry.getKey(), entry.getValue());
             }
+        }
+        //httpGet.setHeader("Content-Type","application/json;charset=UTF-8")
+        if(!(requestParams.getHeaders() != null && requestParams.getHeaders().get("Content-Type") != null)){
+            request.addHeader("Content-Type","application/json;charset=UTF-8");
         }
     }
 
@@ -80,20 +90,11 @@ public  class HttpLancher {
         return url;
     }
 
-    private static String wrapParams(String url, HttpRequest requestParams) throws UnsupportedEncodingException {
+    public static String wrapParams(String url, HttpRequest requestParams) throws UnsupportedEncodingException {
         return url.concat("?").concat(createUrlParams(requestParams.getParams()));
     }
 
 
-
-    public static String packParamsAndUrl(AbstractExecutionAwareRequest request, HttpRequest requestParams
-        ,String url) throws UnsupportedEncodingException {
-        //1.设置headers
-        wrapHeaders(request,requestParams);
-        //2.设置url参数
-        url = wrapParams(url,requestParams);
-        return url;
-    }
 
     public static class CallBack implements FutureCallback<HttpResponse> {
 
@@ -105,28 +106,50 @@ public  class HttpLancher {
             this.url = url;
         }
 
-        public void completed(final HttpResponse response2) {
-            // System.out.println(request2.getRequestLine() + "->" + response2.getStatusLine());
+        @Override
+        public void completed(final HttpResponse response) {
+            String body = "";
             try {
                 // http 访问成功，回调
-                System.out.println(EntityUtils.toString(response2.getEntity()));
-                command.httpRequest.setHttpResult("success");
-                command.asynCommandListener.onSuccess(command.context,EntityUtils.toString(response2.getEntity()));
+                HttpEntity entity = response.getEntity();
+                if (entity != null && response.getStatusLine().getStatusCode() == 200) {
+                    final InputStream instream = entity.getContent();
+                    try {
+                        final StringBuilder sb = new StringBuilder();
+                        final char[] tmp = new char[1024];
+                        final Reader reader = new InputStreamReader(instream,UTF_8);
+                        int l;
+                        while ((l = reader.read(tmp)) != -1) {
+                            sb.append(tmp, 0, l);
+                        }
+                        body = sb.toString();
+                    } finally {
+                        instream.close();
+                        EntityUtils.consume(entity);
+                    }
+                    command.httpRequest.setHttpResult("success");
+                    command.asynCommandListener.onSuccess(command.context,body);
+                }else{
+                    command.httpRequest.setHttpResult("failed");
+                    SpringContext.getBean(MyRoundLoadBalancer.class).notifyFailedNode(command.serviceInstance);
+                    command.asynCommandListener.onFail(command.context,new Throwable(response.getStatusLine().getReasonPhrase()));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
-
+        @Override
         public void failed(final Exception ex) {
             // http 访问失败，回调
             System.out.println("failed:"+url + "->" + ex);
             command.httpRequest.setHttpResult("failed");
-            SpringContext.getBean(MyRoundLoadBalancer.class).notifeFailedNode(command.serviceInstance);
+            SpringContext.getBean(MyRoundLoadBalancer.class).notifyFailedNode(command.serviceInstance);
             command.asynCommandListener.onFail(command.context,ex);
 
         }
 
+        @Override
         public void cancelled() {
             System.out.println("cancelled:"+url + " cancelled");
             command.httpRequest.setHttpResult("cancelled");
