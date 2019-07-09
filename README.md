@@ -29,3 +29,64 @@
 
 ## 聚合网关
 ![Gate](doc/image/gate.png)
+
+## 压测性能
+![Performance](doc/image/performance.png)
+
+## 开发成本
+![Uml](doc/image/Uml.png)
+
+## 业务代码编写
+```
+@RequestMapping(value = "/sayHello",method = RequestMethod.GET)
+    public Mono<String> sayHello(){
+    //    feignClientSao.hi2("uft-8",111L,"name","body","aaa");
+        Map<String,Object> requestData = new HashMap<>();
+        requestData.put("userId","16999999");
+        Mono<String> kk = Mono.just("hello");
+            return  ActorTopo.newBuilder(ActorGroupIdEnum.SAY_HELLO)
+                    .frist(SayHelloFristActor.class)
+                    .topo(SyncDBActor.class, SayHelloHttpGetActor.class, SayHelloHttpPutActor.class, SayHelloHttpPostActor.class,SayHelloHttpDeleteActor.class)
+                    .parall(20)
+                    .build()
+                    .start(requestData);
+    }
+```
+
+```
+public class SayHelloHttpPostActor extends AbstractHttpActor {
+
+
+    @Override
+    public HttpRequest buildExecuteData(ActContext context) {
+        //组装http请求信息，具体请求由框架执行
+        SimpleClass body = new SimpleClass();
+        body.setCode("200");
+        body.setMsg("OK");
+        return new HttpRequest().withServiceName("feign-server")
+                .withRequestPath("/test2/ha{name}")
+                .withRequestMethod(Request.HttpMethod.POST)
+                .withParam("number",(Integer.valueOf((String) context.getResponseData().get("GETDATA")))+"1")
+                .withPathVarible("name","jett")
+                .withHeader("header1","headervalue")
+                .withRequestBody(JSON.toJSONString(body));
+    }
+
+    @Override
+    public Class<? extends BaseActor> executeNextOnSuccess(ActContext context, Object data) {
+        //异步http执行完以后的操作,返回null就直接走responseActor
+        Map<String,Object> result = new HashMap<>();
+        result.put("CODE","200");
+        result.put("MSG","OK");
+        result.put("POSTDATA",data);
+        context.setResponseData(result);
+        return SayHelloHttpPutActor.class;
+    }
+
+
+    @Override
+    public Class<? extends BaseActor> executeNextOnError(ActContext context, Throwable exception) {
+        return null;
+    }
+}
+```
