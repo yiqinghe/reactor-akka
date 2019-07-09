@@ -1,5 +1,6 @@
 package monoServer.actors;
 
+import monoServer.command.RedisCommand;
 import monoServer.common.ActContext;
 import monoServer.enums.RedisCommandEnum;
 import monoServer.lettuce.LettuceClient;
@@ -11,7 +12,7 @@ public abstract class AbstractLettcueRedisActor extends AbstractAsynActor {
         return receiveBuilder()
                 .match(ActContext.class, context -> {
                     RedisCommand redisCommand= this.buildExecuteData(context);
-                    excuteComand(redisCommand,context);
+                    LettuceClient.getInstance().excuteComand(redisCommand,context,this);
                 })
                 .build();
     }
@@ -33,20 +34,6 @@ public abstract class AbstractLettcueRedisActor extends AbstractAsynActor {
     public void onFail(ActContext context, Throwable exception) {
         Class<? extends BaseActor> aClass = executeNextOnError(context, exception);
         dispatch(aClass,context);
-    }
-
-    public void excuteComand(RedisCommand redisCommand,ActContext context){
-        if(redisCommand.command.equals(RedisCommandEnum.GET)) {
-
-            LettuceClient.getInstance().get(redisCommand.key,
-                    list -> onSuccess(context, list),
-                    error -> onFail(context, (Throwable) error));
-        }
-    }
-
-    public static class RedisCommand{
-        RedisCommandEnum command;
-        String key;
     }
 
 }

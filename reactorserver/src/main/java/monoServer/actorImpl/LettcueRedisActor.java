@@ -2,7 +2,9 @@ package monoServer.actorImpl;
 
 import monoServer.actors.AbstractLettcueRedisActor;
 import monoServer.actors.BaseActor;
+import monoServer.command.RedisCommand;
 import monoServer.common.ActContext;
+import monoServer.enums.RedisCommandEnum;
 
 import java.util.List;
 
@@ -10,7 +12,10 @@ public class LettcueRedisActor extends AbstractLettcueRedisActor {
 
     @Override
     public RedisCommand buildExecuteData(ActContext context) {
-       return null;
+        RedisCommand command = new RedisCommand()
+                .setKey("jett1")
+                .setCommandType(RedisCommandEnum.HGETALL);
+       return command;
     }
 
     @Override

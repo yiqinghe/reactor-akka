@@ -64,7 +64,8 @@ public class Controller {
         Mono<String> kk = Mono.just("hello");
             return  ActorTopo.newBuilder(ActorGroupIdEnum.SAY_HELLO)
                     .frist(SayHelloFristActor.class)
-                    .topo(SyncDBActor.class, SayHelloHttpGetActor.class, SayHelloHttpPutActor.class, SayHelloHttpPostActor.class,SayHelloHttpDeleteActor.class)
+                    //.topo(SyncDBActor.class, SayHelloHttpGetActor.class, SayHelloHttpPutActor.class, SayHelloHttpPostActor.class,SayHelloHttpDeleteActor.class)
+                    .topo(LettcueRedisActor.class)
                     .parall(20)
                     .build()
                     .start(requestData);
