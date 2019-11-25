@@ -94,6 +94,7 @@ suspend fun <T> syncHttp2(block: suspend (result:String) -> T): T{
      response = httpclient.execute(httpGet)
      try {
          response = httpclient.execute(httpGet)
+
          return block(response)
          /*var entity:HttpEntity = response.entity
          if(entity != null){

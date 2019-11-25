@@ -5,6 +5,7 @@ import io.lettuce.core.KeyValue;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.reactive.RedisReactiveCommands;
+import io.netty.util.concurrent.Promise;
 import monoServer.actors.AbstractLettcueRedisActor;
 import monoServer.actors.BaseActor;
 import monoServer.command.RedisCommand;
@@ -24,6 +25,7 @@ public class LettuceClient {
     private static RedisReactiveCommands<String,String> redisReactiveCommands;
 
     public static LettuceClient getInstance(){
+        Promise TaskPromise
       if (lettuceClient==null){
           synchronized (LettuceClient.class){
               if (lettuceClient==null){
